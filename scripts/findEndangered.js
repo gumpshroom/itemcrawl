@@ -40,8 +40,8 @@ function getMallStore(playerID) {
     for (var i = 0; i < priceList.length; i++) {
         var match = priceList[i].match(/<td valign=center>\s*<b>(.*)<\/b>\s*\((.*)\)\s*<\/td>\s*<td>999,999,999 Meat<\/td>/)
         var item = match[1]
-        var price = match[3]
-        if (price == "999,999,999") {
+
+
             if (mallPrice(toItem(item)) == -1) {
                 if (nearExtinct[item] == null) {
                     nearExtinct[item] = []
@@ -49,7 +49,7 @@ function getMallStore(playerID) {
                 }
                 nearExtinct[item].push(playerID)
             }
-        }
+        
     }
     return null
 }
