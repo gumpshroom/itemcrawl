@@ -8,7 +8,9 @@ var output = ""
 for (var item in nearExtinct) {
     output += item + " : " + nearExtinct[item].toString() + "\n"
 }
-
+if (!bufferToFile(output, "/home/runner/kmafia/nearExtinct.txt")) {
+    abort("failed to write to file")
+}
 function getPlayerName(playerID) {
     var profile = visitUrl("showplayer.php?who=" + playerID);
     if (profile.includes("<td>Sorry, this player could not be found.</td>")) {
