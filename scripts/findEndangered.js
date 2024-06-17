@@ -1,7 +1,7 @@
 //const km = require("kolmafia");
 Object.assign(globalThis, require("kolmafia"));
 var nearExtinct = {}
-for (var i = 37000; i <= 3700000; i++) {
+for (var i = 52900; i <= 3700000; i++) {
     getMallStore(i)
 }
 var output = ""
