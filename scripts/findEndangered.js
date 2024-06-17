@@ -30,6 +30,7 @@ function getMallStore(playerID) {
     print("Store found for player " + playerID);
     //var inventory = {}
     var priceList = store.match(/<td valign=center>\s*<b>(.*)<\/b>\s*\((.*)\)\s*<\/td>\s*<td>(.*) Meat<\/td>/gm)
+    if (!priceList) {return}
     for (var i = 0; i < priceList.length; i++) {
         var match = priceList[i].match(/<td valign=center>\s*<b>(.*)<\/b>\s*\((.*)\)\s*<\/td>\s*<td>(.*) Meat<\/td>/)
         var item = match[1]
