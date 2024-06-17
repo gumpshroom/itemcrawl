@@ -27,6 +27,7 @@ function getPlayerName(playerID) {
 function getMallStore(playerID) {
     var store = visitUrl("mallstore.php?whichstore=" + playerID);
     if (store.match(/<td>.* does not have a store in the Mall\.<\/td>/g)) {
+        print("No store found for player " + playerID)
         return null
     }
     print("Store found for player " + playerID);
