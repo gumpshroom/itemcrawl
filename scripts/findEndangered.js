@@ -1,6 +1,8 @@
 //const km = require("kolmafia");
 Object.assign(globalThis, require("kolmafia"));
-var nearExtinct = {}
+var oldData = fileToBuffer("./nearExtinct.json")
+var nearExtinct = oldData ? JSON.parse(oldData) : {}
+
 var start = parseInt(fileToBuffer("./searchedIndex.txt"))
 if (start)
     print("Starting from " + start)
@@ -50,16 +52,14 @@ function getMallStore(playerID) {
         if (mallPrice(toItem(item)) == -1) {
             if (nearExtinct[item] == null) {
                 nearExtinct[item] = []
-                print("New item found: " + item + " at store with qty " + qty)
-                var output = ""
-                for (var item in nearExtinct) {
-                    output += item + " : " + nearExtinct[item].toString() + "\n"
-                }
-                if (!bufferToFile(output, "./nearExtinct.txt")) {
-                    abort("failed to write to file")
-                }
             }
             nearExtinct[item].push(playerID)
+                
+            print("New item found: " + item + " at store with qty " + qty)
+                if (!bufferToFile(JSON.stringify(nearExtinct), "./nearExtinct.json")) {
+                    abort("failed to write to file")
+                }
+            
         }
     }
 
