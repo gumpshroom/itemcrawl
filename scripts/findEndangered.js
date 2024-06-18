@@ -4,7 +4,7 @@ var nearExtinct = {}
 for (var i = 53000; i <= 3700000; i++) {
     var res = getMallStore(i)
     if (res) {
-        print("No store found for player " + i)
+        //print("No store found for player " + i)
     }
 }
 var output = ""
