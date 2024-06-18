@@ -3,9 +3,6 @@ Object.assign(globalThis, require("kolmafia"));
 var nearExtinct = {}
 for (var i = 52900; i <= 3700000; i++) {
     var res = getMallStore(i)
-    if (res) {
-        print("No store found for player " + i)
-    }
 }
 var output = ""
 for (var item in nearExtinct) {
@@ -31,7 +28,7 @@ function getMallStore(playerID) {
     var store = visitUrl("mallstore.php?whichstore=" + playerID);
     if (store.match(/<td valign=center>\s*<b>(.*)<\/b>\s*\((.*)\)\s*<\/td>\s*<td>999,999,999 Meat<\/td>/g)) {
         //print("No store found for player " + playerID)
-        return "no store found"
+        return null
     }
     print("Store found for player " + playerID);
     //var inventory = {}
