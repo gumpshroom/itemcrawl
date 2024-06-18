@@ -29,6 +29,9 @@ function getMallStore(playerID) {
     }
     print("Store found for player " + playerID);
     //var inventory = {}
+    if (!store.includes("999,999,999 Meat")) {
+        return "no items of interest"
+    }
     var priceList = store.match(/<td valign=center>\s*<b>(.*)<\/b>\s*\(.*\)\s*<\/td>\s*<td>999,999,999 Meat<\/td>/gm)
     if (!priceList) { return }
     print(priceList.length)
