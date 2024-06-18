@@ -1,19 +1,13 @@
 //const km = require("kolmafia");
 Object.assign(globalThis, require("kolmafia"));
 var nearExtinct = {}
-for (var i = 53000; i <= 3700000; i++) {
+for (var i = 60000; i <= 3700000; i++) {
     var res = getMallStore(i)
     if (res) {
         //print("No store found for player " + i)
     }
 }
-var output = ""
-for (var item in nearExtinct) {
-    output += item + " : " + nearExtinct[item].toString() + "\n"
-}
-if (!bufferToFile(output, "/home/runner/kmafia/nearExtinct.txt")) {
-    abort("failed to write to file")
-}
+
 function getPlayerName(playerID) {
     var profile = visitUrl("showplayer.php?who=" + playerID);
     if (profile.includes("<td>Sorry, this player could not be found.</td>")) {
@@ -35,21 +29,26 @@ function getMallStore(playerID) {
     }
     print("Store found for player " + playerID);
     //var inventory = {}
-    var priceList = store.match(/<td valign=center>\s*<b>(.*)<\/b>\s*\((.*)\)\s*<\/td>\s*<td>999,999,999 Meat<\/td>/gm)
-    if (!priceList) {return}
+    var priceList = store.match(/<td valign=center>\s*<b>(.*)<\/b>\s*\(.*\)\s*<\/td>\s*<td>999,999,999 Meat<\/td>/gm)
+    if (!priceList) { return }
     for (var i = 0; i < priceList.length; i++) {
-        var match = priceList[i].match(/<td valign=center>\s*<b>(.*)<\/b>\s*\((.*)\)\s*<\/td>\s*<td>999,999,999 Meat<\/td>/)
+        var match = priceList[i].match(/<td valign=center>\s*<b>(.*)<\/b>\s*\(.*\)\s*<\/td>\s*<td>999,999,999 Meat<\/td>/)
         var item = match[1]
-        var price = match[3]
-        if (price == "999,999,999") {
-            if (mallPrice(toItem(item)) == -1) {
-                if (nearExtinct[item] == null) {
-                    nearExtinct[item] = []
-                    print("New item found: " + item + " at store " + playerID)
+        if (mallPrice(toItem(item)) == -1) {
+            if (nearExtinct[item] == null) {
+                nearExtinct[item] = []
+                print("New item found: " + item + " at store " + playerID)
+                var output = ""
+                for (var item in nearExtinct) {
+                    output += item + " : " + nearExtinct[item].toString() + "\n"
                 }
-                nearExtinct[item].push(playerID)
+                if (!bufferToFile(output, "/home/runner/kmafia/nearExtinct.txt")) {
+                    abort("failed to write to file")
+                }
             }
+            nearExtinct[item].push(playerID)
         }
     }
+
     return null
 }
