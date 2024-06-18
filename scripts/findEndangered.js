@@ -33,7 +33,7 @@ function getPlayerName(playerID) {
 
 function getMallStore(playerID) {
     var store = visitUrl("mallstore.php?whichstore=" + playerID);
-    
+    bufferToFile(store, "./store.txt")
     //var inventory = {}
     if (store.length > 300000 || !store.includes("999,999,999 Meat")) {
         return "no items of interest"
