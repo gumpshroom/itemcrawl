@@ -7,6 +7,9 @@ if (start)
 if (!start || start < 0)
     start = 132000
 for (var i = start; i <= 3700000; i++) {
+    if (i % 1000 == 0) {
+        print("-----FINISHED #" + i + "-----")
+    }
     var res = getMallStore(i)
     bufferToFile(toString(i), "./searchedIndex.txt")
     if (res) {
@@ -30,15 +33,12 @@ function getPlayerName(playerID) {
 
 function getMallStore(playerID) {
     var store = visitUrl("mallstore.php?whichstore=" + playerID);
-    if (store.match(/<td>.* does not have a store in the Mall\.<\/td>/g)) {
-        //print("No store found for player " + playerID)
-        return "no store found"
-    }
-    print("Store found for player " + playerID);
+    
     //var inventory = {}
     if (store.length > 300000 || !store.includes("999,999,999 Meat")) {
         return "no items of interest"
     }
+    print("Store has max price! " + playerID);
     var priceList = store.match(/<td valign=center>\s*<b>(.*)<\/b>\s*\(.*\)\s*<\/td>\s*<td>999,999,999 Meat<\/td>/gm)
     if (!priceList) { return }
     print(priceList.length)
