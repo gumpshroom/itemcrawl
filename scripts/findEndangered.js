@@ -40,16 +40,17 @@ function getMallStore(playerID) {
     }
     bufferToFile(store, "./store.txt")
     print("Store has max price! " + playerID);
-    var priceList = store.match(/<td valign=center>\s*<b>(.*)<\/b>\s*\(.*\)\s*<\/td>\s*<td>999,999,999 Meat<\/td>/gm)
+    var priceList = store.match(/<td valign=center><b>([^<]*)<\/b> \((\d*)\) <\/td><td>999,999,999 Meat<\/td>/gm)
     if (!priceList) { return }
     print(priceList.toString())
     for (var i = 0; i < priceList.length; i++) {
-        var match = priceList[i].match(/<td valign=center>\s*<b>(.*)<\/b>\s*\(.*\)\s*<\/td>\s*<td>999,999,999 Meat<\/td>/)
+        var match = priceList[i].match(/<td valign=center><b>([^<]*)<\/b> \((\d*)\) <\/td><td>999,999,999 Meat<\/td>/)
         var item = match[1]
+        var qty = match[2]
         if (mallPrice(toItem(item)) == -1) {
             if (nearExtinct[item] == null) {
                 nearExtinct[item] = []
-                print("New item found: " + item + " at store " + playerID)
+                print("New item found: " + item + " at store with qty " + qty)
                 var output = ""
                 for (var item in nearExtinct) {
                     output += item + " : " + nearExtinct[item].toString() + "\n"
