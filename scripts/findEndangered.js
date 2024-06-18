@@ -41,7 +41,7 @@ function getMallStore(playerID) {
     print("Store has max price! " + playerID);
     var priceList = store.match(/<td valign=center>\s*<b>(.*)<\/b>\s*\(.*\)\s*<\/td>\s*<td>999,999,999 Meat<\/td>/gm)
     if (!priceList) { return }
-    print(Array.toString(priceList))
+    print(priceList.toString())
     for (var i = 0; i < priceList.length; i++) {
         var match = priceList[i].match(/<td valign=center>\s*<b>(.*)<\/b>\s*\(.*\)\s*<\/td>\s*<td>999,999,999 Meat<\/td>/)
         var item = match[1]
