@@ -3,6 +3,9 @@ Object.assign(globalThis, require("kolmafia"));
 var nearExtinct = {}
 for (var i = 52900; i <= 3700000; i++) {
     var res = getMallStore(i)
+    if (res) {
+        print("No store found for player " + i)
+    }
 }
 var output = ""
 for (var item in nearExtinct) {
@@ -26,9 +29,9 @@ function getPlayerName(playerID) {
 
 function getMallStore(playerID) {
     var store = visitUrl("mallstore.php?whichstore=" + playerID);
-    if (store.match(/<td valign=center>\s*<b>(.*)<\/b>\s*\((.*)\)\s*<\/td>\s*<td>999,999,999 Meat<\/td>/g)) {
+    if (store.match(/<td>.* does not have a store in the Mall\.<\/td>/g)) {
         //print("No store found for player " + playerID)
-        return null
+        return "no store found"
     }
     print("Store found for player " + playerID);
     //var inventory = {}
@@ -37,8 +40,8 @@ function getMallStore(playerID) {
     for (var i = 0; i < priceList.length; i++) {
         var match = priceList[i].match(/<td valign=center>\s*<b>(.*)<\/b>\s*\((.*)\)\s*<\/td>\s*<td>999,999,999 Meat<\/td>/)
         var item = match[1]
-
-
+        var price = match[3]
+        if (price == "999,999,999") {
             if (mallPrice(toItem(item)) == -1) {
                 if (nearExtinct[item] == null) {
                     nearExtinct[item] = []
@@ -46,7 +49,7 @@ function getMallStore(playerID) {
                 }
                 nearExtinct[item].push(playerID)
             }
-        
+        }
     }
     return null
 }
