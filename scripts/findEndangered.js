@@ -1,12 +1,17 @@
 //const km = require("kolmafia");
 Object.assign(globalThis, require("kolmafia"));
 var nearExtinct = {}
-for (var i = 84000; i <= 3700000; i++) {
+var start = parseInt(fileToBuffer("./searchedIndex.txt"))
+if (!start || start < 0)
+    start = 132000
+for (var i = start; i <= 3700000; i++) {
     var res = getMallStore(i)
+    bufferToFile(toString(i), "./searchedIndex.txt")
     if (res) {
         //print("No store found for player " + i)
     }
 }
+
 
 function getPlayerName(playerID) {
     var profile = visitUrl("showplayer.php?who=" + playerID);
@@ -46,7 +51,7 @@ function getMallStore(playerID) {
                 for (var item in nearExtinct) {
                     output += item + " : " + nearExtinct[item].toString() + "\n"
                 }
-                if (!bufferToFile(output, "/home/runner/kmafia/nearExtinct.txt")) {
+                if (!bufferToFile(output, "./nearExtinct.txt")) {
                     abort("failed to write to file")
                 }
             }
