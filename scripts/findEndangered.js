@@ -2,6 +2,8 @@
 Object.assign(globalThis, require("kolmafia"));
 var nearExtinct = {}
 var start = parseInt(fileToBuffer("./searchedIndex.txt"))
+if (start)
+    print("Starting from " + start)
 if (!start || start < 0)
     start = 132000
 for (var i = start; i <= 3700000; i++) {
@@ -34,7 +36,7 @@ function getMallStore(playerID) {
     }
     print("Store found for player " + playerID);
     //var inventory = {}
-    if (!store.includes("999,999,999 Meat")) {
+    if (store.length > 300000 || !store.includes("999,999,999 Meat")) {
         return "no items of interest"
     }
     var priceList = store.match(/<td valign=center>\s*<b>(.*)<\/b>\s*\(.*\)\s*<\/td>\s*<td>999,999,999 Meat<\/td>/gm)
