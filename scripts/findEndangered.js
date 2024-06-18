@@ -5,7 +5,7 @@ var start = parseInt(fileToBuffer("./searchedIndex.txt"))
 if (start)
     print("Starting from " + start)
 if (!start || start < 0)
-    start = 132000
+    start = 1
 for (var i = start; i <= 3700000; i++) {
     if (i % 1000 == 0) {
         print("-----FINISHED #" + i + "-----")
@@ -38,11 +38,11 @@ function getMallStore(playerID) {
     if (store.length > 300000 || !store.includes("999,999,999 Meat")) {
         return "no items of interest"
     }
-    bufferToFile(store, "./store.txt")
+    //bufferToFile(store, "./store.txt")
     print("Store has max price! " + playerID);
     var priceList = store.match(/<td valign=center><b>([^<]*)<\/b> \((\d*)\) <\/td><td>999,999,999 Meat<\/td>/gm)
     if (!priceList) { return }
-    print(priceList.join("\n"))
+    //print(priceList.join("\n"))
     for (var i = 0; i < priceList.length; i++) {
         var match = priceList[i].match(/<td valign=center><b>([^<]*)<\/b> \((\d*)\) <\/td><td>999,999,999 Meat<\/td>/)
         var item = match[1]
