@@ -37,7 +37,7 @@ function getMallStore(playerID) {
     var store = visitUrl("mallstore.php?whichstore=" + playerID);
     
     //var inventory = {}
-    if (store.length > 600000 || !store.includes("999,999,999 Meat")) {
+    if (store.length > 1000000 || !store.includes("999,999,999 Meat")) {
         return "no items of interest"
     }
     //bufferToFile(store, "./store.txt")
