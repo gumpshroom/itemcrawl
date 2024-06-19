@@ -45,6 +45,7 @@ function getMallStore(playerID) {
     var priceList = store.match(/<td valign=center><b>([^<]*)<\/b> \(([^<]*)\) [^<]*<\/td><td>999,999,999 Meat<\/td>/gm)
     if (!priceList) { 
         bufferToFile(store, "./store.txt")
+        print("something went wrong?")
         return 
     }
     //print(priceList.join("\n"))
