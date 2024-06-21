@@ -35,8 +35,9 @@ function main(sender, message) {
                         if (Object.keys(getShop()).length === 0) {
                             runningGame = false;
                             //post game handle
-                            var shopInv = getShopLog()
-                            var winner = shopInv[gameSize - Math.floor(Math.random() * shopInv.length)].match(/ \d\d:\d\d:\d\d (.*) bought/)[1]
+                            var shopLog = getShopLog()
+                            print(shopInv)
+                            var winner = shopLog[gameSize - Math.floor(Math.random() * shopLog.length)].match(/ \d\d:\d\d:\d\d (.*) bought/)[1]
                             var amount = Math.floor(Math.random() * prize)
 
                             chatGames("AR ended !! " + winner + " won " + amount + " meat.")
@@ -50,6 +51,7 @@ function main(sender, message) {
                             chatGames("pulling in 30 seconds.")
                         } else if (cycles > 24) {
                             chatGames("pulling tickets.")
+                            gameSize = shopAmount(item)
                             takeShop(item)
                         }
                         wait(5)
@@ -68,10 +70,6 @@ function main(sender, message) {
 function chatGames(msg) {
     //visitUrl("submitnewchat.php?playerid=" + myId() + "&pwd=" + myHash() + "&graf=" + msg + "&j=1");
     chatPrivate("ggar", msg)
-}
-function getTicketHolders() {
-    var shop = getShopLog();
-    
 }
 function putShopConfirm(price, limit, qty, item) {
     print(toInt(item))
