@@ -3,6 +3,7 @@ Object.assign(globalThis, require("kolmafia"));
 var ticketList = ["small box", "large box", "jumping horseradish", "perfect cosmopolitan", "perfect dark and stormy", "perfect mimosa", "perfect negroni", "perfect old-fashioned", "perfect paloma", "Sacramento wine", "hacked gibson", "red pixel potion", "octolus oculus", "spooky hi mein", "stinky hi mein", "hot hi mein", "cold hi mein", "sleazy hi mein", "zombie", "elemental caipiroska", "perfect ice cube", "golden gum", "snow berries", "Game Grid ticket", "scrumptious reagent", "milk of magnesium", "tiny bottle of absinthe", "Bloody Nora", "llama lama gong", "van key", "tattered scrap of paper", "ice harvest"]
 var runningGame = false
 function main(sender, message) {
+    print("ayo")
     var args = message.split(" ");
     var cmd = args[0];
     args = args.slice(1);
@@ -68,3 +69,4 @@ function getTicketHolders() {
     var shop = getShopLog();
     
 }
+module.exports = { main }
