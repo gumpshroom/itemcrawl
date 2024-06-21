@@ -12,8 +12,7 @@ function main(sender, message) {
             chatPrivate(sender, "help me add this help message")
             break;
         case "host":
-            var prize = parseInt(args[1])
-            print(args)
+            var prize = parseInt(args[0])
             print(myMeat())
             if (prize && prize > 0 && prize <= 200000 && myMeat() >= prize) {
                 var foundItem = false;
