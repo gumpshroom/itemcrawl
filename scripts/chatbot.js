@@ -13,7 +13,7 @@ function main(sender, message) {
             break;
         case "host":
             var prize = parseInt(args[1])
-            print(prize)
+            print(args)
             print(myMeat())
             if (prize && prize > 0 && prize <= 200000 && myMeat() >= prize) {
                 var foundItem = false;
