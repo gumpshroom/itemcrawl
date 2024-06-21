@@ -108,7 +108,7 @@ function kmail(to, message, meat, insidenote) {
         return false;
     }
     var res = visitUrl("sendmessage.php?pwd=&action=send&towho=" + to + "&message=" + message + "&savecopy=on&sendmeat=" + meat);
-    if (res.includes("That player cannot receive meat or items")) {
+    if (res.includes("That player cannot receive Meat or items")) {
         print("player cannot receive meat or items. sending gift")
         return visitUrl("town_sendgift.php?pwd=&towho=" + to + "&note=" + message + "&insidenote=" + insidenote + "&whichpackage=1&fromwhere=0&howmany1=1&whichitem1=0&sendmeat=" + meat + "&action=Yep.");
     } else {
