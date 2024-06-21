@@ -51,7 +51,7 @@ function main(sender, message) {
                             chatGames("pulling in 30 seconds.")
                         } else if (cycles > 24) {
                             chatGames("pulling tickets.")
-                            gameSize = shopAmount(item)
+                            gameSize = 10 - shopAmount(item)
                             takeShop(item)
                         }
                         wait(5)
