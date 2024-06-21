@@ -25,13 +25,31 @@ function main(sender, message) {
                 if (!runningGame && Object.keys(getShop()).length === 0) {
                     putShop(100, 1, 10, item);
                     runningGame = true;
-                    chatGames("AR requested by " + sender + " with prize 1d" + prize + " meat !")
+                    chatGames("AR requested by " + sender + " with prize 1d" + prize + " meat !!")
+                    var cycles = 0;
+                    var gameSize = 10;
                     while (runningGame) {
                         refreshShop();
                         if (Object.keys(getShop()).length === 0) {
                             runningGame = false;
+                            //post game handle
+                            var winner = getShopLog()[gameSize - Math.floor(Math.random() * getShopLog().length)].match(/ \d\d:\d\d:\d\d (.*) bought/)[1]
+                            var amount = Math.floor(Math.random() * prize)
 
+                            chatGames("AR ended !! " + winner + " won " + amount + " meat.")
+
+                            //kmail
                         }
+                        cycles++;
+                        if (cycles > 12) {
+                            chatGames("pulling in 1 minute.")
+                        } else if (cycles > 18) {
+                            chatGames("pulling in 30 seconds.")
+                        } else if (cycles > 24) {
+                            chatGames("pulling tickets.")
+                            takeShop(item)
+                        }
+                        wait(5)
                     }
                 }
             } else {
@@ -43,7 +61,8 @@ function main(sender, message) {
     }
 }
 function chatGames(msg) {
-    visitUrl("submitnewchat.php?playerid=" + myId() + "&pwd=" + myHash() + "&graf=" + msg + "&j=1");
+    //visitUrl("submitnewchat.php?playerid=" + myId() + "&pwd=" + myHash() + "&graf=" + msg + "&j=1");
+    chatPrivate("ggames", msg)
 }
 function getTicketHolders() {
     var shop = getShopLog();
