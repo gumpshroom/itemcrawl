@@ -73,7 +73,7 @@ function getTicketHolders() {
 }
 function putShopConfirm(price, limit, qty, item) {
     print(toInt(item))
-    return visitUrl("backoffice.php?itemid=" + toInt(item) + "&price=" + price + "&quantity=" + qty + "&limit=" + limit + "&pwd=" + myHash() + "&neveragain=0&priceok=0&action=additem&ajax=1&_=" + Date.now());
+    return visitUrl("managestore.php?item1=" + toInt(item) + "&price1=" + price + "&qty1=" + qty + "&limit1=" + limit + "&pwd=" + myHash() + "&neveragain=0&priceok=0&action=additem&ajax=1&_=" + Date.now());
 }
 
 module.exports = { main }
