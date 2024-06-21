@@ -73,7 +73,7 @@ function getTicketHolders() {
 }
 function putShopConfirm(price, limit, qty, item) {
     print(item)
-    return visitUrl("managestore.php?pwd=" + myHash() + "&action=additem&price=" + price + "&limit=" + limit + "&quantity=" + qty + "&itemid=" + item.id + "&_=" + Date.now() + "&neveragain=0&ajax=1&priceok=1")
+    return visitUrl("managestore.php?pwd=" + myHash() + "&action=additem&price=" + price + "&limit=" + limit + "&quantity=" + qty + "&itemid=" + toInt(item) + "&_=" + Date.now() + "&neveragain=0&ajax=1&priceok=1")
 }
 
 module.exports = { main }
