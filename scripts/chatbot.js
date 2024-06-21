@@ -12,7 +12,7 @@ function main(sender, message) {
             break;
         case "host":
             var prize = parseInt(args[1])
-            if (prize && prize > 10000 && prize < 200000 && myMeat() >= prize) {
+            if (prize && prize > 0 && prize <= 200000 && myMeat() >= prize) {
                 var foundItem = false;
                 var item;
                 while (!foundItem) {
