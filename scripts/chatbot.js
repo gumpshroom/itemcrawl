@@ -41,10 +41,10 @@ function main(sender, message) {
                             //post game handle
                             var shopLog = getShopLog()
                             //print(shopInv)
-                            var winner = shopLog[gameSize - Math.floor(Math.random() * gameSize)].match(/ \d\d:\d\d:\d\d (.*) bought/)[1]
+                            var winner = shopLog[Math.floor(Math.random() * gameSize)].match(/ \d\d:\d\d:\d\d (.*) bought/)[1]
                             var amount = Math.floor(Math.random() * prize)
 
-                            chatGames("AR ended !! " + winner + " won " + amount + " meat.")
+                            chatGames("game ended !! " + winner + " won " + amount + " meat.")
                             
                             //kmail
 
@@ -77,6 +77,13 @@ function main(sender, message) {
             }
             break;
         case "roll":
+            if (args[0].startsWith("1d") && parseInt(args[0].split("d")[1]) && !args[0].includes(" ")) {
+                var roll = parseInt(args[0].split("d")[1])
+                var result = Math.floor(Math.random() * roll) + 1
+                chatPrivate(sender, "you rolled " + result + " out of " + roll)
+            } else {
+                chatPrivate(sender, "sorry i dont support anything other than 1d rolls (in development)")
+            }
             break;
     }
 }
