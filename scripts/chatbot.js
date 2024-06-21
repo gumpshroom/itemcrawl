@@ -81,7 +81,7 @@ function main(sender, message) {
     }
 }
 function chatGames(msg) {
-    visitUrl("submitnewchat.php?playerid=" + myId() + "&pwd=" + myHash() + "&graf=/games " + msg + "&j=1");
+    visitUrl("submitnewchat.php?playerid=" + myId() + "&pwd=" + myHash() + "&graf=/games " + msg + "&j=1", false);
     //chatPrivate("ggar", msg)
 }
 function putShopConfirm(price, limit, qty, item) {
