@@ -44,9 +44,9 @@ function main(sender, message) {
                             //kmail
                         }
                         cycles++;
-                        if (cycles > 12) {
+                        if (cycles === 13) {
                             chatGames("pulling in 1 minute.")
-                        } else if (cycles > 18) {
+                        } else if (cycles === 19) {
                             chatGames("pulling in 30 seconds.")
                         } else if (cycles > 24) {
                             chatGames("pulling tickets.")
