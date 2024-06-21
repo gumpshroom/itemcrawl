@@ -45,11 +45,11 @@ function main(sender, message) {
                             //kmail
                         }
                         cycles++;
-                        if (cycles === 13) {
+                        if (cycles === 12 * 5 + 1) {
                             chatGames("pulling in 1 minute.")
-                        } else if (cycles === 19) {
+                        } else if (cycles === 12 * 5 + 18 + 1) {
                             chatGames("pulling in 30 seconds.")
-                        } else if (cycles > 24) {
+                        } else if (cycles > 12 * 5 + 24) {
                             chatGames("pulling tickets.")
                             gameSize = 10 - shopAmount(item)
                             takeShop(item)
