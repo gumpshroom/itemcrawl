@@ -14,7 +14,7 @@ function main(sender, message) {
         case "host":
             var prize = parseInt(args[0])
             print(myMeat())
-            if (prize && prize > 0 && prize <= 200000 && myMeat() >= prize) {
+            if (prize && prize > 0 && prize <= 200000 && myMeat() + 50 >= prize) { //50 meat for package, if winner in ronin
                 var foundItem = false;
                 var item;
                 while (!foundItem) {
@@ -25,7 +25,7 @@ function main(sender, message) {
                 }
                 refreshShop();
                 if (!runningGame && Object.keys(getShop()).length === 0) {
-                    putShop(100, 1, 10, item);
+                    putShopConfirm(100, 1, 10, item);
                     runningGame = true;
                     chatGames("AR requested by " + sender + " with prize 1d" + prize + " meat !!")
                     var cycles = 0;
@@ -35,7 +35,8 @@ function main(sender, message) {
                         if (Object.keys(getShop()).length === 0) {
                             runningGame = false;
                             //post game handle
-                            var winner = getShopLog()[gameSize - Math.floor(Math.random() * getShopLog().length)].match(/ \d\d:\d\d:\d\d (.*) bought/)[1]
+                            var shopInv = getShopLog()
+                            var winner = shopInv[gameSize - Math.floor(Math.random() * shopInv.length)].match(/ \d\d:\d\d:\d\d (.*) bought/)[1]
                             var amount = Math.floor(Math.random() * prize)
 
                             chatGames("AR ended !! " + winner + " won " + amount + " meat.")
@@ -70,4 +71,8 @@ function getTicketHolders() {
     var shop = getShopLog();
     
 }
+function putShopConfirm(price, limit, qty, item) {
+    visitUrl("managestore.php?pwd=" + myHash() + "&action=additem&price=" + price + "&limit=" + limit + "&quantity=" + qty + "&itemid=" + item.id + "&_=" + Date.now() + "&neveragain=0&ajax=1&priceok=1")
+}
+
 module.exports = { main }
