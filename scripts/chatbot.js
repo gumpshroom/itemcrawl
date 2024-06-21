@@ -54,6 +54,8 @@ function main(sender, message) {
                         }
                         wait(5)
                     }
+                } else {
+                    chatPrivate(sender, "game already running")
                 }
             } else {
                 chatPrivate(sender, "i dont have enough meat or the prize amount is invalid")
