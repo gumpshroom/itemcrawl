@@ -1,5 +1,5 @@
 Object.assign(globalThis, require("kolmafia"));
-const GAME_TIME = 0; //minutes
+const GAME_TIME = 5; //minutes
 var ticketList = ["small box", "large box", "jumping horseradish", "perfect cosmopolitan", "perfect dark and stormy", "perfect mimosa", "perfect negroni", "perfect old-fashioned", "perfect paloma", "Sacramento wine", "hacked gibson", "red pixel potion", "octolus oculus", "spooky hi mein", "stinky hi mein", "hot hi mein", "cold hi mein", "sleazy hi mein", "zombie", "elemental caipiroska", "perfect ice cube", "golden gum", "snow berries", "Game Grid ticket", "scrumptious reagent", "milk of magnesium", "tiny bottle of absinthe", "Bloody Nora", "llama lama gong", "van key", "tattered scrap of paper", "ice harvest"]
 var runningGame = false
 function main(sender, message) {
@@ -14,7 +14,11 @@ function main(sender, message) {
         case "host":
             var prize = parseInt(args[0])
             print(myMeat())
-            if (prize && prize > 0 && prize <= 200000 && myMeat() + 50 >= prize) { //50 meat for package, if winner in ronin
+            var validPrice = prize && prize > 0 && prize <= 200000 && myMeat() + 50 >= prize
+            if (sender === "ggar") {
+                validPrice = prize && prize > 0 && myMeat() + 50 >= prize
+            }
+            if (validPrice) { //50 meat for package, if winner in ronin
                 var foundItem = false;
                 var item;
                 while (!foundItem) {
@@ -77,8 +81,8 @@ function main(sender, message) {
     }
 }
 function chatGames(msg) {
-    //visitUrl("submitnewchat.php?playerid=" + myId() + "&pwd=" + myHash() + "&graf=" + msg + "&j=1");
-    chatPrivate("ggar", msg)
+    visitUrl("submitnewchat.php?playerid=" + myId() + "&pwd=" + myHash() + "&graf=" + msg + "&j=1");
+    //chatPrivate("ggar", msg)
 }
 function putShopConfirm(price, limit, qty, item) {
     print(toInt(item))
