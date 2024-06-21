@@ -58,6 +58,7 @@ function main(sender, message) {
                             print(kmail(winner, "you won !!", amount, '"ggames is the best"'))
                         }
                         cycles++;
+                        wait(5)
                         if (cycles === 12 * GAME_TIME + 1) {
                             chatGames("pulling in 1 minute.")
                         } else if (cycles === 12 * GAME_TIME + 18 + 1) {
@@ -67,7 +68,7 @@ function main(sender, message) {
                             gameSize = 10 - shopAmount(item)
                             takeShop(item)
                         }
-                        wait(5)
+                        
                     }
                 } else {
                     chatPrivate(sender, "game already running")
