@@ -15,7 +15,7 @@ function main(sender, message) {
             var prize = parseInt(args[0])
             print(myMeat())
             var validPrice = prize && prize > 0 && prize <= 200000 && myMeat() + 50 >= prize
-            if (sender === "ggar") {
+            if (sender === "ggar" || toInt(sender) === "3118267") {
                 validPrice = prize && prize > 0 && myMeat() + 50 >= prize
             }
             if (validPrice) { //50 meat for package, if winner in ronin
@@ -81,8 +81,9 @@ function main(sender, message) {
     }
 }
 function chatGames(msg) {
-    visitUrl("submitnewchat.php?playerid=" + myId() + "&pwd=" + myHash() + "&graf=/games " + msg + "&j=1", false);
+    //visitUrl("submitnewchat.php?playerid=" + myId() + "&pwd=" + myHash() + "&graf=/games " + msg + "&j=1", false);
     //chatPrivate("ggar", msg)
+    chatMacro("/games " + msg)
 }
 function putShopConfirm(price, limit, qty, item) {
     print(toInt(item))
