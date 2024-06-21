@@ -25,7 +25,7 @@ function main(sender, message) {
                 }
                 refreshShop();
                 if (!runningGame && Object.keys(getShop()).length === 0) {
-                    putShopConfirm(100, 1, 10, item);
+                    print(putShopConfirm(100, 1, 10, item));
                     runningGame = true;
                     chatGames("AR requested by " + sender + " with prize 1d" + prize + " meat !!")
                     var cycles = 0;
@@ -65,14 +65,14 @@ function main(sender, message) {
 }
 function chatGames(msg) {
     //visitUrl("submitnewchat.php?playerid=" + myId() + "&pwd=" + myHash() + "&graf=" + msg + "&j=1");
-    chatPrivate("ggames", msg)
+    chatPrivate("ggar", msg)
 }
 function getTicketHolders() {
     var shop = getShopLog();
     
 }
 function putShopConfirm(price, limit, qty, item) {
-    visitUrl("managestore.php?pwd=" + myHash() + "&action=additem&price=" + price + "&limit=" + limit + "&quantity=" + qty + "&itemid=" + item.id + "&_=" + Date.now() + "&neveragain=0&ajax=1&priceok=1")
+    return visitUrl("managestore.php?pwd=" + myHash() + "&action=additem&price=" + price + "&limit=" + limit + "&quantity=" + qty + "&itemid=" + item.id + "&_=" + Date.now() + "&neveragain=0&ajax=1&priceok=1")
 }
 
 module.exports = { main }
