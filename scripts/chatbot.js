@@ -56,6 +56,7 @@ function main(sender, message) {
                                 cliExecute("csend " + amount + " meat to " + winner + "|you won!!!")
                             }*/
                             print(kmail(winner, "you won !!", amount, '"ggames is the best"'))
+                            break
                         }
                         cycles++;
                         wait(5)
