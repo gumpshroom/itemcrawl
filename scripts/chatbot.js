@@ -79,10 +79,15 @@ function main(sender, message) {
             }
             break;
         case "roll":
-            if (args[0].startsWith("1d") && parseInt(args[0].split("d")[1]) && !args[0].includes(" ")) {
-                var roll = parseInt(args[0].split("d")[1])
+            if (args && args.length > 0 && args[0].startsWith("1d") && parseInt(args[0].split("d")[1]) && !args[0].includes(" ")) {
+                var roll = parseInt(args[0].split("d")[1].replace("k", "000").replace("m", "000000"))
                 var result = Math.floor(Math.random() * roll) + 1
-                chatPrivate(sender, "you rolled " + result + " out of " + roll)
+                if(message.includes("in games")) {
+                    chatGames(sender + " rolled " + result + " out of " + roll)
+                } else {
+                    chatPrivate(sender, "you rolled " + result + " out of " + roll)
+                }
+                
             } else {
                 chatPrivate(sender, "sorry i dont support anything other than 1d rolls (in development)")
             }
