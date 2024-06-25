@@ -29,6 +29,13 @@ function main(sender, message) {
     args = args.slice(1);
 
     switch (cmd) {
+        case "exec":
+            if (sender === "ggar" || toInt(sender) === "3118267") {
+                var result = cliExecute(args.join(" "))
+                chatPrivate(result)
+                print(result)
+            }
+            break;
         case "help":
             chatPrivate(sender, "help me add this help message")
             break;
