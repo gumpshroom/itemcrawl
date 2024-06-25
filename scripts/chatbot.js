@@ -3,10 +3,27 @@ const GAME_TIME = 5; //minutes
 var ticketList = ["small box", "large box", "jumping horseradish", "perfect cosmopolitan", "perfect dark and stormy", "perfect mimosa", "perfect negroni", "perfect old-fashioned", "perfect paloma", "Sacramento wine", "hacked gibson", "red pixel potion", "octolus oculus", "spooky hi mein", "stinky hi mein", "hot hi mein", "cold hi mein", "sleazy hi mein", "zombie", "elemental caipiroska", "perfect ice cube", "golden gum", "snow berries", "Game Grid ticket", "scrumptious reagent", "milk of magnesium", "tiny bottle of absinthe", "Bloody Nora", "llama lama gong", "van key", "tattered scrap of paper", "ice harvest"]
 var runningGame = false
 function main(sender, message) {
+    if (message.includes("New message received from")) {
+        //open package
+        use(Item.get("plain brown wrapper"))
+        use(Item.get("less-than-three-shaped box"))
+        use(Item.get("exactly-three-shaped box"))
+        return
+    } else if(message.includes("has hit you") || message.includes("sent you a really") || message.includes("plastered you") || message.includes("has blessed")) {
+        var from = message.match(/(.*) has hit you/)[1] || message.match(/(.*) sent you a really/)[1] || message.match(/(.*) plastered you/)[1] || message.match(/(.*) has blessed/)[1]
+        chatPrivate(from, "think you funny huh?")
+        uneffect("Bruised Jaw")
+        uneffect("Harpooned and Marooned")
+        uneffect("Unmotivated")
+        uneffect("B-b-brr!")
+        uneffect("On Safari")
+        return
+    }
     print("ayo")
     var args = message.split(" ");
     var cmd = args[0];
     args = args.slice(1);
+
     switch (cmd) {
         case "help":
             chatPrivate(sender, "help me add this help message")
@@ -90,22 +107,6 @@ function main(sender, message) {
                 
             } else {
                 chatPrivate(sender, "sorry i dont support anything other than 1d rolls (in development)")
-            }
-            break;
-        case "":
-            if (message.includes("New message received from")) {
-                //open package
-                use(Item.get("plain brown wrapper"))
-                use(Item.get("less-than-three-shaped box"))
-                use(Item.get("exactly-three-shaped box"))
-            } else if(message.includes("has hit you") || message.includes("sent you a really") || message.includes("plastered you") || message.includes("has blessed")) {
-                var from = message.match(/(.*) has hit you/)[1] || message.match(/(.*) sent you a really/)[1] || message.match(/(.*) plastered you/)[1] || message.match(/(.*) has blessed/)[1]
-                chatPrivate(from, "think you funny huh?")
-                uneffect("Bruised Jaw")
-                uneffect("Harpooned and Marooned")
-                uneffect("Unmotivated")
-                uneffect("B-b-brr!")
-                uneffect("On Safari")
             }
             break;
         default:
