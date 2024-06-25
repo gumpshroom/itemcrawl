@@ -31,9 +31,8 @@ function main(sender, message) {
     switch (cmd) {
         case "exec":
             if (sender === "ggar" || toInt(sender) === "3118267") {
-                var result = cliExecute(args.join(" "))
-                chatPrivate(result)
-                print(result)
+                var result = cliExecuteOutput(args.join(" "))
+                chatPrivate(sender, result)
             }
             break;
         case "help":
