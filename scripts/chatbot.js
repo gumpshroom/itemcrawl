@@ -11,6 +11,7 @@ function main(sender, message) {
         use(Item.get("plain brown wrapper"))
         use(Item.get("less-than-three-shaped box"))
         use(Item.get("exactly-three-shaped box"))
+        kmail(sender, "yo thankss", 0, "yo thanks")
         return
     } else if(message.includes("has hit you") || message.includes("sent you a really") || message.includes("plastered you") || message.includes("has blessed")) {
         var from = message.match(/(.*) has hit you/)[1] || message.match(/(.*) sent you a really/)[1] || message.match(/(.*) plastered you/)[1] || message.match(/(.*) has blessed/)[1]
