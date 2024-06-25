@@ -41,8 +41,10 @@ function main(sender, message) {
         case "exec":
             if (sender === "ggar" || toInt(sender) === "3118267") {
                 var result = cliExecuteOutput(args.join(" "))
-                chatPrivate(sender, result)
                 print(result)
+                result.split("\n").array.forEach(element => {
+                    chatPrivate(sender, element)
+                });
             }
             break;
         case "help":
