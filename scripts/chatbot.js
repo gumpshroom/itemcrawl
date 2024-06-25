@@ -2,6 +2,9 @@ Object.assign(globalThis, require("kolmafia"));
 const GAME_TIME = 5; //minutes
 var ticketList = ["small box", "large box", "jumping horseradish", "perfect cosmopolitan", "perfect dark and stormy", "perfect mimosa", "perfect negroni", "perfect old-fashioned", "perfect paloma", "Sacramento wine", "hacked gibson", "red pixel potion", "octolus oculus", "spooky hi mein", "stinky hi mein", "hot hi mein", "cold hi mein", "sleazy hi mein", "zombie", "elemental caipiroska", "perfect ice cube", "golden gum", "snow berries", "Game Grid ticket", "scrumptious reagent", "milk of magnesium", "tiny bottle of absinthe", "Bloody Nora", "llama lama gong", "van key", "tattered scrap of paper", "ice harvest"]
 var runningGame = false
+function uneffect(str) {
+    cliExecute("uneffect " + str)
+}
 function main(sender, message) {
     if (message.includes("New message received from")) {
         //open package
