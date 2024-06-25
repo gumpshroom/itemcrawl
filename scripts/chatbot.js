@@ -11,6 +11,15 @@ function main(sender, message) {
         use(Item.get("plain brown wrapper"))
         use(Item.get("less-than-three-shaped box"))
         use(Item.get("exactly-three-shaped box"))
+        use(Item.get("chocolate box"))
+        use(Item.get("miniature coffin"))
+        use(Item.get("solid asbestos box"))
+        use(Item.get("solid linoleum box"))
+        use(Item.get("solid chrome box"))
+        use(Item.get("cryptic puzzle box"))
+        use(Item.get("refrigerated biohazard container"))
+        use(Item.get("magnetic field"))
+        use(Item.get("black velvet box"))
         kmail(sender, "yo thankss", 0, "yo thanks")
         return
     } else if(message.includes("has hit you") || message.includes("sent you a really") || message.includes("plastered you") || message.includes("has blessed")) {
