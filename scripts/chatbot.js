@@ -20,7 +20,7 @@ function main(sender, message) {
         use(Item.get("refrigerated biohazard container"))
         use(Item.get("magnetic field"))
         use(Item.get("black velvet box"))
-        kmail(sender, "yo thankss", 0, "yo thanks")
+        kmail(toInt(sender), "yo thanks", 0, "yo thanks")
         return
     } else if(message.includes("has hit you") || message.includes("sent you a really") || message.includes("plastered you") || message.includes("has blessed")) {
         var from = message.match(/(.*) has hit you/)[1] || message.match(/(.*) sent you a really/)[1] || message.match(/(.*) plastered you/)[1] || message.match(/(.*) has blessed/)[1]
