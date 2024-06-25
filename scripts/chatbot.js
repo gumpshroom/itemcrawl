@@ -43,6 +43,8 @@ function main(sender, message) {
                 var result = cliExecuteOutput(args.join(" "))
                 print(result)
                 chatPrivate(sender, result)
+            } else {
+                chatPrivate(sender, "hey hey hey wait.. you cant tell me what to do...")
             }
             break;
         case "help":
