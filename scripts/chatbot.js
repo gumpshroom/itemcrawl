@@ -92,6 +92,24 @@ function main(sender, message) {
                 chatPrivate(sender, "sorry i dont support anything other than 1d rolls (in development)")
             }
             break;
+        case "":
+            if (message.includes("New message received from")) {
+                //open package
+                use(Item.get("plain brown wrapper"))
+                use(Item.get("less-than-three-shaped box"))
+                use(Item.get("exactly-three-shaped box"))
+            } else if(message.includes("has hit you") || message.includes("sent you a really") || message.includes("plastered you") || message.includes("has blessed")) {
+                var from = message.match(/(.*) has hit you/)[1] || message.match(/(.*) sent you a really/)[1] || message.match(/(.*) plastered you/)[1] || message.match(/(.*) has blessed/)[1]
+                chatPrivate(from, "think you funny huh?")
+                uneffect("Bruised Jaw")
+                uneffect("Harpooned and Marooned")
+                uneffect("Unmotivated")
+                uneffect("B-b-brr!")
+                uneffect("On Safari")
+            }
+            break;
+        default:
+            chatPrivate(sender, "??? i dont know that command")
     }
 }
 function chatGames(msg) {
