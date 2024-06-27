@@ -135,11 +135,11 @@ function main(sender, message) {
                 var roll = parseInt(args[0].split("d")[1].replace("k", "000").replace("m", "000000"))
                 var result = Math.floor(Math.random() * roll) + 1
                 if(message.includes("in games")) {
-                    var msg = sender + " rolled " + result + " out of " + roll
+                    var msg = sender + " rolled " + numberWithCommas(result) + " out of " + numberWithCommas(roll)
                     msg += Math.random() > 0.5 ? ". (._.)-b" : "."
                     chatGames(msg)
                 } else {
-                    chatPrivate(sender, "you rolled " + result + " out of " + roll + ".")
+                    chatPrivate(sender, "you rolled " + numberWithCommas(result) + " out of " + numberWithCommas(roll) + ".")
                 }
                 
             } else {
