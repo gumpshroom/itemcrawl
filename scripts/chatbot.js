@@ -87,6 +87,7 @@ function main(sender, message) {
                             var ticketName = match[3]
                             var amount = Math.floor(Math.random() * prize) + 1
                             var msg = "game ended !! rolling 1d" + gameSize + " gives " +  (gameSize - winnerIndex) + "..."
+                            chatGames(msg)
                             wait(5)
                             msg = winner + " bought a " + ticketName + " at " + match[1] + " and won " + amount + " meat. "
                             msg += Math.random() > 0.5 ? "congrats!!" : "(._.)-b"
