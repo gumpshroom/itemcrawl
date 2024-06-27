@@ -81,7 +81,7 @@ function main(sender, message) {
                             var shopLog = getShopLog()
                             //print(shopInv)
                             var winner = shopLog[Math.floor(Math.random() * gameSize)].match(/ \d\d:\d\d:\d\d (.*) bought/)[1]
-                            var amount = Math.floor(Math.random() * prize)
+                            var amount = Math.floor(Math.random() * prize) + 1
 
                             chatGames("game ended !! " + winner + " won " + amount + " meat.")
                             
