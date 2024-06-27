@@ -135,7 +135,7 @@ function main(sender, message) {
             if (sender === "ggar" || toInt(sender) === "3118267") {
                 for (var i = 0; i < ticketList.length; i++) {
                     try {
-                        buy(args.length > 0 ? args[0] : 100, Item.get(ticketList[i]))
+                        buy(args.length > 0 ? parseInt(args[0]) : 100, Item.get(ticketList[i]))
                         print("bought " + ticketList[i])
                     } catch(e) {
                         print(e)
