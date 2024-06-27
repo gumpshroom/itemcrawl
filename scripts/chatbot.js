@@ -127,7 +127,7 @@ function main(sender, message) {
                     chatPrivate(sender, "game already running")
                 }
             } else {
-                chatPrivate(sender, "i dont have enough meat or the prize amount is invalid")
+                chatPrivate(sender, "i dont have enough meat or the prize amount is invalid. (i have " + numberWithCommas(myMeat()) + " meat)")
             }
             break;
         case "roll":
