@@ -81,15 +81,15 @@ function main(sender, message) {
                             var shopLog = getShopLog()
                             //print(shopInv)
                             var winnerIndex = Math.floor(Math.random() * gameSize) + 1
-                            var match = shopLog[winnerIndex - 1].match(/ \d\d:\d\d:\d\d (.*) bought (\d*) \((.*)\)/)
+                            var match = shopLog[winnerIndex - 1].match(/ (\d\d:\d\d:\d\d) (.*) bought (\d*) \((.*)\)/)
                             var winner = match[2]
                             var boughtTime = match[1]
-                            var ticketName = match[3]
+                            var ticketName = match[4]
                             var amount = Math.floor(Math.random() * prize) + 1
                             var msg = "game ended !! rolling 1d" + gameSize + " gives " +  (gameSize - winnerIndex) + "..."
                             chatGames(msg)
                             wait(5)
-                            msg = winner + " bought a " + ticketName + " at " + match[1] + " and won " + amount + " meat. "
+                            msg = winner + " bought " + match[3] + " " + ticketName + " at " + boughtTime + " and won " + amount + " meat. "
                             msg += Math.random() > 0.5 ? "congrats!!" : "(._.)-b"
                             chatGames(msg)
                             
