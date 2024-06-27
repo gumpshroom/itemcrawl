@@ -5,6 +5,11 @@ var runningGame = false
 function uneffect(str) {
     cliExecute("uneffect " + str)
 }
+function numberWithCommas(x) {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+  }
 function main(sender, message) {
     if (message.includes("New message received from")) {
         //open package
@@ -70,7 +75,7 @@ function main(sender, message) {
                 if (!runningGame && Object.keys(getShop()).length === 0) {
                     print(putShopConfirm(100, 1, 10, item));
                     runningGame = true;
-                    chatGames("AR requested by " + sender + " with prize 1d" + prize + " meat !!")
+                    chatGames("AR requested by " + sender + " with prize 1d" + numberWithCommas(prize) + " meat !!")
                     var cycles = 0;
                     var gameSize = 10;
                     while (runningGame) {
@@ -86,10 +91,10 @@ function main(sender, message) {
                             var boughtTime = match[1]
                             var ticketName = match[4]
                             var amount = Math.floor(Math.random() * prize) + 1
-                            var msg = "game ended !! rolling 1d" + gameSize + " gives " +  (gameSize - winnerIndex) + "..."
+                            var msg = "game ended !! rolling 1d" + gameSize + " gives " +  ((gameSize + 1) - winnerIndex) + "..."
                             chatGames(msg)
                             wait(5)
-                            msg = winner + " bought " + match[3] + " " + ticketName + " at " + boughtTime + " and won " + amount + " meat. "
+                            msg = winner + " bought " + match[3] + " " + ticketName + " at " + boughtTime + " and won " + numberWithCommas(amount) + " meat. "
                             msg += Math.random() > 0.5 ? "congrats!!" : "(._.)-b"
                             chatGames(msg)
                             
