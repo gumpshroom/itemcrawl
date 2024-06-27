@@ -137,6 +137,7 @@ function main(sender, message) {
                     try {
                         buy(args.length > 0 ? parseInt(args[0]) : 100, Item.get(ticketList[i]))
                         print("bought " + ticketList[i])
+                        chatPrivate(sender, "bought " + ticketList[i] + " x" + (args.length > 0 ? parseInt(args[0]) : 100))
                     } catch(e) {
                         print(e)
                     }
