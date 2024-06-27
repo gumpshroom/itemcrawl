@@ -83,7 +83,7 @@ function main(sender, message) {
                             var winner = shopLog[Math.floor(Math.random() * gameSize)].match(/ \d\d:\d\d:\d\d (.*) bought/)[1]
                             var amount = Math.floor(Math.random() * prize) + 1
 
-                            chatGames("game ended !! " + winner + " won " + amount + " meat.")
+                            chatGames("game ended !! " + winner + " won " + amount + " meat. " + Math.random() > 0.5 ? "congrats!!" : "(._.)-b")
                             
                             //kmail
 
@@ -122,7 +122,7 @@ function main(sender, message) {
                 var roll = parseInt(args[0].split("d")[1].replace("k", "000").replace("m", "000000"))
                 var result = Math.floor(Math.random() * roll) + 1
                 if(message.includes("in games")) {
-                    chatGames(sender + " rolled " + result + " out of " + roll)
+                    chatGames(sender + " rolled " + result + " out of " + roll + Math.random() > 0.5 ? ". (._.)-b" : "."
                 } else {
                     chatPrivate(sender, "you rolled " + result + " out of " + roll)
                 }
