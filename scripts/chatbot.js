@@ -131,6 +131,20 @@ function main(sender, message) {
                 chatPrivate(sender, "sorry i dont support anything other than 1d rolls (in development)")
             }
             break;
+        case "restock":
+            if (sender === "ggar" || toInt(sender) === "3118267") {
+                for (var i = 0; i < ticketList.length; i++) {
+                    try {
+                        buy(args.length > 0 ? args[0] : 100, Item.get(ticketList[i]))
+                        print("bought " + ticketList[i])
+                    } catch(e) {
+                        print(e)
+                    }
+                }
+            } else {
+                chatPrivate(sender, "hey hey hey wait.. you cant tell me what to do...")
+            }
+            break;
         default:
             chatPrivate(sender, "??? i dont know that command")
     }
