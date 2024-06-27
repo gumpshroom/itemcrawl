@@ -161,6 +161,9 @@ function main(sender, message) {
                 chatPrivate(sender, "hey hey hey wait.. you cant tell me what to do...")
             }
             break;
+        case "howmuchmeat":
+            chatPrivate(sender, "i have " + numberWithCommas(myMeat()) + " meat...")
+            break;
         default:
             chatPrivate(sender, "??? i dont know that command")
     }
