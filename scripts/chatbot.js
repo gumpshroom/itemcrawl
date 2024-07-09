@@ -13,7 +13,7 @@ function numberWithCommas(x) {
 function main(sender, message) {
     if (message.includes("New message received from")) {
         //open package
-        var author = message.match(/New message received from (.*)\./)[1]
+        var author = message.match(/New message received from (.*)/)[1]
         use(Item.get("plain brown wrapper"))
         use(Item.get("less-than-three-shaped box"))
         use(Item.get("exactly-three-shaped box"))
