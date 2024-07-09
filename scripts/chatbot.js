@@ -9,10 +9,11 @@ function numberWithCommas(x) {
     var parts = x.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return parts.join(".");
-  }
+}
 function main(sender, message) {
     if (message.includes("New message received from")) {
         //open package
+        var author = message.match(/New message received from (.*)\./)[1]
         use(Item.get("plain brown wrapper"))
         use(Item.get("less-than-three-shaped box"))
         use(Item.get("exactly-three-shaped box"))
@@ -25,7 +26,7 @@ function main(sender, message) {
         use(Item.get("refrigerated biohazard container"))
         use(Item.get("magnetic field"))
         use(Item.get("black velvet box"))
-        kmail(toInt(sender), "yo thanks", 0, "yo thanks")
+        kmail(author, "yo thanks", 0, "yo thanks")
 
         if (!sender === "Peace and Love") {
             var msg = visitUrl("messages.php")
@@ -38,7 +39,7 @@ function main(sender, message) {
                 contents = contents.replace(/<br>/g, "\n")
                 contents = contents.replace(/<.*?>/g, "")
                 var replyStr = sender + " said at " + date + ":\n" + contents
-                kmail(toInt("ggar"), replyStr, 0, "reply")
+                kmail("ggar", replyStr, 0, "reply")
             }
         }
 
