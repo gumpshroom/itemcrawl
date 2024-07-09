@@ -31,6 +31,7 @@ function main(sender, message) {
             var msg = visitUrl("messages.php")
             var rgx = /<b>From<\/b>.*?!--([^<]*)--><br><blockquote>(.*?)<\/blockquote>/
             var match = msg.match(rgx)
+            console.log("sending message to ggar")
             if (match) {
                 var date = match[1]
                 var contents = match[2]
