@@ -31,7 +31,7 @@ function main(sender, message) {
             var msg = visitUrl("messages.php")
             var rgx = /<b>From<\/b>.*?!--([^<]*)--><br><blockquote>(.*?)<\/blockquote>/
             var match = msg.match(rgx)
-            console.log("sending message to ggar")
+            print("sending message to ggar")
             if (match) {
                 var date = match[1]
                 var contents = match[2]
@@ -207,7 +207,9 @@ function kmail(to, message, meat, insidenote) {
     if (meat > myMeat()) {
         return false;
     }
-    var res = visitUrl("sendmessage.php?pwd=&action=send&towho=" + to + "&message=" + message + "&savecopy=on&sendmeat=" + meat);
+    var reqUrl = "sendmessage.php?pwd=&action=send&towho=" + to + "&message=" + message + "&savecopy=on&sendmeat=" + meat
+    print(reqUrl)
+    var res = visitUrl(reqUrl);
     if (res.includes("That player cannot receive Meat or items")) {
         print("player cannot receive meat or items. sending gift")
         return visitUrl("town_sendgift.php?pwd=&towho=" + to + "&note=" + message + "&insidenote=" + insidenote + "&whichpackage=1&fromwhere=0&howmany1=1&whichitem1=0&sendmeat=" + meat + "&action=Yep.");
