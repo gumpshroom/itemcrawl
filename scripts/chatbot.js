@@ -26,6 +26,21 @@ function main(sender, message) {
         use(Item.get("magnetic field"))
         use(Item.get("black velvet box"))
         kmail(toInt(sender), "yo thanks", 0, "yo thanks")
+
+        if (!sender === "Peace and Love") {
+            var msg = visitUrl("messages.php")
+            var rgx = /<b>From<\/b>.*?!--([^<]*)--><br><blockquote>(.*?)<\/blockquote>/
+            var match = msg.match(rgx)
+            if (match) {
+                var date = match[1]
+                var contents = match[2]
+                contents = contents.replace(/<br>/g, "\n")
+                contents = contents.replace(/<.*?>/g, "")
+                var replyStr = sender + " said at " + date + ":\n" + contents
+                kmail(toInt("ggar"), replyStr, 0, "reply")
+            }
+        }
+
         return
     } else if(message.includes("has hit you") || message.includes("sent you a really") || message.includes("plastered you") || message.includes("has blessed")) {
         var from = message.match(/(.*) has hit you/)[1] || message.match(/(.*) sent you a really/)[1] || message.match(/(.*) plastered you/)[1] || message.match(/(.*) has blessed/)[1]
@@ -163,6 +178,9 @@ function main(sender, message) {
             break;
         case "howmuchmeat":
             chatPrivate(sender, "i have " + numberWithCommas(myMeat()) + " meat...")
+            break;
+        case "breakthebank":
+            
             break;
         default:
             chatPrivate(sender, "??? i dont know that command")
