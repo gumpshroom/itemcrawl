@@ -38,7 +38,7 @@ function main(sender, message) {
                 var contents = match[2]
                 contents = contents.replace(/<br>/g, "\n")
                 contents = contents.replace(/<.*?>/g, "")
-                var replyStr = sender + " said at " + date + ":\n" + contents
+                var replyStr = author + " said at " + date + ":\n" + contents
                 kmail("ggar", replyStr, 0, "reply")
             }
         }
