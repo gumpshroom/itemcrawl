@@ -28,7 +28,7 @@ function main(sender, message) {
         use(Item.get("black velvet box"))
         kmail(author, "yo thanks", 0, "yo thanks")
 
-        if (!author === "Peace and Love") {
+        if (author !== "Peace and Love") {
             var msg = visitUrl("messages.php")
             var rgx = /<b>From<\/b>.*?!--([^<]*)--><br><blockquote>(.*?)<\/blockquote>/
             var match = msg.match(rgx)
