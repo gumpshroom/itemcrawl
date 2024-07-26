@@ -78,7 +78,7 @@ function main(sender, message) {
             var validPrice = prize && prize > 0 && prize <= 200000 && myMeat() + 50 >= prize
             if (sender === "ggar" || toInt(sender) === "3118267") {
                 validPrice = prize && prize > 0 && myMeat() + 50 >= prize
-            } else if (toInt(sender) === "3574897" || toInt(sender) === "3678443" || toInt(sender) === "2790818") {
+            } else if (sender.toLowerCase() === "fargblabble" || sender.toLowerCase() === "junem" || sender.toLowerCase() === "pandamanster") {
                 //fargblabble, junem, pandamanster
                 validPrice = prize && prize > 0 && prize <= 5000000 && myMeat() + 50 >= prize
             }
