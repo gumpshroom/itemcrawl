@@ -78,7 +78,8 @@ function main(sender, message) {
             var validPrice = prize && prize > 0 && prize <= 200000 && myMeat() + 50 >= prize
             if (sender === "ggar" || toInt(sender) === "3118267") {
                 validPrice = prize && prize > 0 && myMeat() + 50 >= prize
-            } else if (sender === "Fargblabble" || toInt(sender) === "3574897") {
+            } else if (toInt(sender) === "3574897" || toInt(sender) === "3678443" || toInt(sender) === "2790818") {
+                //fargblabble, junem, pandamanster
                 validPrice = prize && prize > 0 && prize <= 5000000 && myMeat() + 50 >= prize
             }
             if (validPrice) { //50 meat for package, if winner in ronin
