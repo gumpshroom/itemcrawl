@@ -78,6 +78,8 @@ function main(sender, message) {
             var validPrice = prize && prize > 0 && prize <= 200000 && myMeat() + 50 >= prize
             if (sender === "ggar" || toInt(sender) === "3118267") {
                 validPrice = prize && prize > 0 && myMeat() + 50 >= prize
+            } else if (sender === "Fargblabble" || toInt(sender) === "3574897") {
+                validPrice = prize && prize > 0 && prize <= 5000000 && myMeat() + 50 >= prize
             }
             if (validPrice) { //50 meat for package, if winner in ronin
                 var foundItem = false;
@@ -153,7 +155,7 @@ function main(sender, message) {
                 var result = Math.floor(Math.random() * roll) + 1
                 if(message.includes("in games")) {
                     var msg = sender + " rolled " + numberWithCommas(result) + " out of " + numberWithCommas(roll)
-                    msg += Math.random() > 0.5 ? ". (._.)-b" : "."
+                    msg += Math.random() > 0.5 ? ". (._.)-b" : ". :]"
                     chatGames(msg)
                 } else {
                     chatPrivate(sender, "you rolled " + numberWithCommas(result) + " out of " + numberWithCommas(roll) + ".")
