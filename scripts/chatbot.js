@@ -2,6 +2,10 @@ Object.assign(globalThis, require("kolmafia"));
 const GAME_TIME = 5; //minutes
 var ticketList = ["small box", "large box", "jumping horseradish", "perfect cosmopolitan", "perfect dark and stormy", "perfect mimosa", "perfect negroni", "perfect old-fashioned", "perfect paloma", "Sacramento wine", "hacked gibson", "red pixel potion", "octolus oculus", "spooky hi mein", "stinky hi mein", "hot hi mein", "cold hi mein", "sleazy hi mein", "zombie", "elemental caipiroska", "perfect ice cube", "golden gum", "snow berries", "Game Grid ticket", "scrumptious reagent", "milk of magnesium", "tiny bottle of absinthe", "Bloody Nora", "llama lama gong", "van key", "tattered scrap of paper", "ice harvest"]
 var runningGame = false
+var oldData = fileToBuffer("./ggamesGlobalObj.json")
+var globalObj = oldData ? JSON.parse(oldData) : {}
+
+
 function uneffect(str) {
     cliExecute("uneffect " + str)
 }
@@ -78,7 +82,7 @@ function main(sender, message) {
             var validPrice = prize && prize > 0 && prize <= 200000 && myMeat() + 50 >= prize
             if (sender === "ggar" || toInt(sender) === "3118267") {
                 validPrice = prize && prize > 0 && myMeat() + 50 >= prize
-            } else if (sender.toLowerCase() === "fargblabble" || sender.toLowerCase() === "junem" || sender.toLowerCase() === "pandamanster") {
+            } else if (sender.toLowerCase() === "fargblabble" || sender.toLowerCase() === "junem" || sender.toLowerCase() === "pandamanster" || sender.toLowerCase === "skent") {
                 //fargblabble, junem, pandamanster
                 validPrice = prize && prize > 0 && prize <= 5000000 && myMeat() + 50 >= prize
             }
