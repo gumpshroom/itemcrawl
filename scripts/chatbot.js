@@ -118,10 +118,11 @@ function main(sender, message) {
                             var msg = "game ended !! rolling 1d" + gameSize + " gives " +  ((gameSize + 1) - winnerIndex) + "..."
                             chatGames(msg)
                             wait(5)
-                            msg = winner + " bought " + match[3] + " " + ticketName + " at " + boughtTime + " and won " + numberWithCommas(amount) + " meat. "
-                            msg += Math.random() > 0.5 ? "congrats!!" : "(._.)-b"
-                            chatGames(msg)
                             globalObj.gamesCount++
+                            msg = winner + " bought " + match[3] + " " + ticketName + " at " + boughtTime + " and won " + numberWithCommas(amount) + " meat. "
+                            msg += "congrats on ggame #" + numberWithCommas(globalObj.gamesCount) + "!!"
+                            chatGames(msg)
+                            
                             bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json")
                             //kmail
 
