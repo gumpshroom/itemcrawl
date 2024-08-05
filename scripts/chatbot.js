@@ -4,7 +4,7 @@ var ticketList = ["small box", "large box", "jumping horseradish", "perfect cosm
 var runningGame = false
 var oldData = fileToBuffer("./ggamesGlobalObj.json")
 var globalObj = oldData ? JSON.parse(oldData) : {}
-
+globalObj.gamesCount = globalObj.gamesCount ? globalObj.gamesCount : 0
 
 function uneffect(str) {
     cliExecute("uneffect " + str)
@@ -121,7 +121,8 @@ function main(sender, message) {
                             msg = winner + " bought " + match[3] + " " + ticketName + " at " + boughtTime + " and won " + numberWithCommas(amount) + " meat. "
                             msg += Math.random() > 0.5 ? "congrats!!" : "(._.)-b"
                             chatGames(msg)
-                            
+                            globalObj.gamesCount++
+                            bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json")
                             //kmail
 
                             /*if (getPlayerRonin(winner)) {
@@ -131,7 +132,7 @@ function main(sender, message) {
                             } else {
                                 cliExecute("csend " + amount + " meat to " + winner + "|you won!!!")
                             }*/
-                            print(kmail(winner, "you won !!", amount, '"ggames is the best"'))
+                            print(kmail(winner, "you won ggame #" + numberWithCommas(globalObj.gamesCount) + "!!", amount, '"ggames is the best"'))
                             break
                         }
                         cycles++;
@@ -190,6 +191,9 @@ function main(sender, message) {
             break;
         case "breakthebank":
             
+            break;
+        case "howmanygames":
+            chatPrivate(sender, "i have hosted " + numberWithCommas(globalObj.gamesCount) + " ggames so far!!")
             break;
         default:
             chatPrivate(sender, "??? i dont know that command")
