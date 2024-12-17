@@ -41,6 +41,7 @@ function main(sender, message) {
 
         if (author !== "Peace and Love") {
             var msg = visitUrl("messages.php")
+            print(msg)
             var rgx = /<b>From<\/b>.*?!--([^<]*)--><br><blockquote>(.*?)<\/blockquote>/
             var match = msg.match(rgx)
             print("sending message to ggar")
@@ -49,7 +50,6 @@ function main(sender, message) {
                 var contents = match[2]
                 
                 var meatmatch = msg.match(/<td valign="center">You gain (.*) Meat.<\/td>/)
-                print(meatmatch);
                 if (meatmatch) {
                     if (!globalObj.donorTable[sender.toLowerCase()]) { globalObj.donorTable[sender.toLowerCase()] = 400000 }
                     var meat = parseInt(meatmatch[1].replace(/,/g, ""))
