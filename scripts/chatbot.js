@@ -143,7 +143,7 @@ function main(sender, message) {
                             msg += "rolling 1d" + numberWithCommas(30 - (globalObj.jackpotStreak > 25 ? 25 : globalObj.jackpotStreak)) + " for the jackpot..."
                             globalObj.jackpot += jackpotAmount
                             chatGames(msg)
-                            wait(2)
+                            wait(5)
                             var jackpotRoll = Math.floor(Math.random() * (30 - (globalObj.jackpotStreak > 25 ? 25 : globalObj.jackpotStreak))) + 1
                             var jackpotmsg = ""
                             if (jackpotRoll === 1) {
