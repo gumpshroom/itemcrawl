@@ -93,6 +93,15 @@ function main(sender, message) {
         case "help":
             chatPrivate(sender, "help me add this help message")
             break;
+        case "setdonorlevel":
+            if (args.length > 1) {
+                if (sender === "ggar") {
+                    globalObj.donorTable[args.slice(1).join(" ").toLowerCase()] = parseInt(args[0]);
+                    bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json");
+                    chatPrivate("ggar", "set " + args.slice(1).join(" ").toLowerCase() + " donor level to " + numberWithCommas(parseInt(args[0])));
+                }
+            }
+            break;
         case "host":
             var prize = parseInt(args[0].slice(0, args[0].length - 1) + args[0].charAt(args[0].length - 1).replace("k", "000").replace("m", "000000"))
             print(myMeat())
