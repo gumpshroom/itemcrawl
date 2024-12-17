@@ -41,7 +41,6 @@ function main(sender, message) {
 
         if (author !== "Peace and Love") {
             var msg = visitUrl("messages.php")
-            print(msg)
             var rgx = /<b>From<\/b>.*?!--([^<]*)--><br><blockquote>(.*?)<\/blockquote>/
             var match = msg.match(rgx)
             print("sending message to ggar")
