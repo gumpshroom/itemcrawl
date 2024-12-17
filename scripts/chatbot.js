@@ -47,9 +47,9 @@ function main(sender, message) {
             if (match) {
                 var date = match[1]
                 var contents = match[2]
-                print(contents)
-                var meatmatch = contents.match(/<td valign="center">You gain (.*) Meat.<\/td>/)
-
+                
+                var meatmatch = msg.match(/<td valign="center">You gain (.*) Meat.<\/td>/)
+                print(meatmatch);
                 if (meatmatch) {
                     if (!globalObj.donorTable[sender.toLowerCase()]) { globalObj.donorTable[sender.toLowerCase()] = 400000 }
                     var meat = parseInt(meatmatch[1].replace(/,/g, ""))
