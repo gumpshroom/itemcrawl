@@ -91,7 +91,7 @@ function main(sender, message) {
             chatPrivate(sender, "help me add this help message")
             break;
         case "host":
-            var prize = parseInt(args[0])
+            var prize = parseInt(args[0].slice(0, r.length - 1) + args[0].charAt(r.length - 1).replace("k", "000").replace("m", "000000"))
             print(myMeat())
             var validPrice = prize && prize > 0 && prize <= 200000 && (myMeat() - globalObj.jackpot) + 50 >= prize
             if (sender === "ggar" || toInt(sender) === "3118267") {
@@ -190,7 +190,8 @@ function main(sender, message) {
             break;
         case "roll":
             if (args && args.length > 0 && args[0].startsWith("1d") && parseInt(args[0].split("d")[1]) && !args[0].includes(" ")) {
-                var roll = parseInt(args[0].split("d")[1].replace("k", "000").replace("m", "000000"))
+                var r = args[0].split("d")[1]
+                var roll = parseInt(r.slice(0, r.length - 1) + r.charAt(r.length - 1).replace("k", "000").replace("m", "000000"))
                 var result = Math.floor(Math.random() * roll) + 1
                 if(message.includes("in games")) {
                     var msg = sender + " rolled " + numberWithCommas(result) + " out of " + numberWithCommas(roll)
@@ -235,6 +236,9 @@ function main(sender, message) {
             break;
         case "howmanygames":
             chatPrivate(sender, "i have hosted " + numberWithCommas(globalObj.gamesCount) + " ggames so far!!")
+            break;
+        case "jackpot":
+            chatPrivate(sender, "the jackpot is currently at " + numberWithCommas(globalObj.jackpot) + " meat and was last won " + numberWithCommas(globalObj.jackpotStreak) + " ggames ago.")
             break;
         case "donor":
             if (args.length > 0) {
