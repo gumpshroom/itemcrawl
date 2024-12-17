@@ -152,8 +152,9 @@ function main(sender, message) {
                                 print(kmail(winner, "you won the jackpot of " + numberWithCommas(globalObj.jackpot) + " meat!!", globalObj.jackpot, '"ggames is the best"'))
                                 globalObj.jackpot = 0
                             } else {
+                                
+                                jackpotmsg += "rolled a " + jackpotRoll + " on a 1d" + numberWithCommas(30 - (globalObj.jackpotStreak > 25 ? 25 : globalObj.jackpotStreak) + 1) + " (payout on 1). pot is now at " + numberWithCommas(globalObj.jackpot) + " meat. the last win was " + numberWithCommas(globalObj.jackpotStreak) + " ggames ago. better luck next time..."
                                 globalObj.jackpotStreak++
-                                jackpotmsg += "rolled a " + jackpotRoll + " on a 1d" + numberWithCommas(30 - (globalObj.jackpotStreak > 25 ? 25 : globalObj.jackpotStreak)) + " (payout on 1). pot is now at " + numberWithCommas(globalObj.jackpot) + " meat. the last win was " + numberWithCommas(globalObj.jackpotStreak) + " ggames ago. better luck next time..."
                             }
                             jackpotmsg += "congrats on ggame #" + numberWithCommas(globalObj.gamesCount) + "!!"
                             chatGames(jackpotmsg)
