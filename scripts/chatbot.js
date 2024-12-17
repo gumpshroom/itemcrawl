@@ -5,7 +5,7 @@ var runningGame = false
 var oldData = fileToBuffer("./ggamesGlobalObj.json")
 var globalObj = oldData ? JSON.parse(oldData) : {}
 globalObj.gamesCount = globalObj.gamesCount ? globalObj.gamesCount : 0
-globalObj.donorTable = globalObj.donorTable ? globalObj.donorTable : [{"fargblabble": 10000000}, {"junem": 10000000}, {"pandamanster": 10000000}, {"skent": 10000000}]
+globalObj.donorTable = {"fargblabble": 10000000, "junem": 10000000, "pandamanster": 10000000, "skent": 10000000}
 globalObj.jackpotStreak = globalObj.jackpotStreak ? globalObj.jackpotStreak : 0
 globalObj.jackpot = globalObj.jackpot ? globalObj.jackpot : 0
 function uneffect(str) {
