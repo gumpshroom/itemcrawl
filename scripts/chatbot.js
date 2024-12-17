@@ -250,6 +250,7 @@ function main(sender, message) {
                     kmail("ggar", "debug", amt, "debug")
                 }
             }
+            break;
         case "donor":
             if (args.length > 0) {
                 if (sender === "ggar" || toInt(sender) === "3118267") {
