@@ -268,6 +268,8 @@ function main(sender, message) {
             break;
         case "global":
             if (sender === "ggar" || toInt(sender) === "3118267") {
+                print(JSON.stringify(globalObj, null, 4))
+                chatPrivate(sender, JSON.stringify(globalObj, null, 4))
                 kmail(sender, JSON.stringify(globalObj, null, 4), 0, "debug")
             }
             break;
