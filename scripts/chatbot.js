@@ -132,7 +132,7 @@ function main(sender, message) {
                             var boughtTime = match[1]
                             var ticketName = match[4]
                             var amount = Math.floor(Math.random() * prize) + 1
-                            var playerAmount = Math.floor(amount * 0.89)
+                            var playerAmount = Math.floor(amount * 0.9)
                             var jackpotAmount = amount - playerAmount
                             var msg = "game ended !! rolling 1d" + gameSize + " gives " +  ((gameSize + 1) - winnerIndex) + "..."
                             chatGames(msg)
@@ -140,11 +140,11 @@ function main(sender, message) {
                             globalObj.gamesCount++
                             msg = winner + " bought " + match[3] + " " + ticketName + " at " + boughtTime + " and won " + numberWithCommas(playerAmount) + " meat. "
                             msg += numberWithCommas(jackpotAmount) + " meat has been added to the jackpot, "
-                            msg += "rolling 1d" + numberWithCommas(20 - (globalObj.jackpotStreak > 15 ? 15 : globalObj.jackpotStreak)) + " for the jackpot..."
+                            msg += "rolling 1d" + numberWithCommas(30 - (globalObj.jackpotStreak > 25 ? 25 : globalObj.jackpotStreak)) + " for the jackpot..."
                             globalObj.jackpot += jackpotAmount
                             chatGames(msg)
                             wait(2)
-                            var jackpotRoll = Math.floor(Math.random() * (20 - (globalObj.jackpotStreak > 15 ? 15 : globalObj.jackpotStreak))) + 1
+                            var jackpotRoll = Math.floor(Math.random() * (30 - (globalObj.jackpotStreak > 25 ? 25 : globalObj.jackpotStreak))) + 1
                             var jackpotmsg = ""
                             if (jackpotRoll === 1) {
                                 globalObj.jackpotStreak = 0
@@ -153,7 +153,7 @@ function main(sender, message) {
                                 globalObj.jackpot = 0
                             } else {
                                 globalObj.jackpotStreak++
-                                jackpotmsg += "rolled a " + jackpotRoll + " on a 1d" + numberWithCommas(100 - (globalObj.jackpotStreak > 15 ? 15 : globalObj.jackpotStreak)) + " (payout on 1). pot is now at " + numberWithCommas(globalObj.jackpot) + " meat. the last win was " + numberWithCommas(globalObj.jackpotStreak) + " ggames ago. better luck next time..."
+                                jackpotmsg += "rolled a " + jackpotRoll + " on a 1d" + numberWithCommas(30 - (globalObj.jackpotStreak > 25 ? 25 : globalObj.jackpotStreak)) + " (payout on 1). pot is now at " + numberWithCommas(globalObj.jackpot) + " meat. the last win was " + numberWithCommas(globalObj.jackpotStreak) + " ggames ago. better luck next time..."
                             }
                             jackpotmsg += "congrats on ggame #" + numberWithCommas(globalObj.gamesCount) + "!!"
                             chatGames(jackpotmsg)
