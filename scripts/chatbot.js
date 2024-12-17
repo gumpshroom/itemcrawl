@@ -50,7 +50,7 @@ function main(sender, message) {
                 print(contents)
                 print("does the meat match?")
                 var meatmatch = contents.match(/<td valign="center">You gain (.*) Meat\.<\/td>/)
-                chatPrivate("ggar", meatmatch)
+                print(meatmatch)
                 if (meatmatch) {
                     print("i gotta add stuff to the donor table")
                     if (!globalObj.donorTable[sender.toLowerCase()]) { globalObj.donorTable[sender.toLowerCase()] = 400000 }
