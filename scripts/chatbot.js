@@ -94,7 +94,7 @@ function main(sender, message) {
             chatPrivate(sender, "help me add this help message")
             break;
         case "host":
-            var prize = parseInt(args[0].slice(0, r.length - 1) + args[0].charAt(r.length - 1).replace("k", "000").replace("m", "000000"))
+            var prize = parseInt(args[0].slice(0, args[0].length - 1) + args[0].charAt(args[0].length - 1).replace("k", "000").replace("m", "000000"))
             print(myMeat())
             var validPrice = prize && prize > 0 && prize <= 200000 && (myMeat() - globalObj.jackpot) + 50 >= prize
             if (sender === "ggar" || toInt(sender) === "3118267") {
