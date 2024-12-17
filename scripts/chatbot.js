@@ -145,6 +145,7 @@ function main(sender, message) {
                             chatGames(msg)
                             wait(2)
                             var jackpotRoll = Math.floor(Math.random() * (20 - (globalObj.jackpotStreak > 15 ? 15 : globalObj.jackpotStreak))) + 1
+                            var jackpotmsg = ""
                             if (jackpotRoll === 1) {
                                 globalObj.jackpotStreak = 0
                                 jackpotmsg += "rolled a 1!! JACKPOT!! " + numberWithCommas(globalObj.jackpot) + " meat has been won by " + winner + "!!"
