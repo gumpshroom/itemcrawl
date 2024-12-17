@@ -153,7 +153,7 @@ function main(sender, message) {
                                 globalObj.jackpot = 0
                             } else {
                                 globalObj.jackpotStreak++
-                                jackpotmsg += "rolled a " + jackpotRoll + " on a 1d" + numberWithCommas(100 - (globalObj.jackpotStreak > 15 ? 15 : globalObj.jackpotStreak)) + " (payout on 1). pot is now at " + numberWithCommas(globalObj.jackpot) + " meat. the last win was " + numberWithCommas(jackpotStreak) + " ggames ago. better luck next time..."
+                                jackpotmsg += "rolled a " + jackpotRoll + " on a 1d" + numberWithCommas(100 - (globalObj.jackpotStreak > 15 ? 15 : globalObj.jackpotStreak)) + " (payout on 1). pot is now at " + numberWithCommas(globalObj.jackpot) + " meat. the last win was " + numberWithCommas(globalObj.jackpotStreak) + " ggames ago. better luck next time..."
                             }
                             jackpotmsg += "congrats on ggame #" + numberWithCommas(globalObj.gamesCount) + "!!"
                             chatGames(jackpotmsg)
