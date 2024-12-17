@@ -34,8 +34,8 @@ function main(sender, message) {
         use(Item.get("magnetic field"))
         use(Item.get("black velvet box"))
         if (myMeat() > prevMeat) {
-            if (!globalObj.donorTable[sender.toLowerCase()]) { globalObj.donorTable[sender.toLowerCase()] = 400000 }
-            globalObj.donorTable[sender.toLowerCase()] += myMeat() - prevMeat;
+            if (!globalObj.donorTable[author.toLowerCase()]) { globalObj.donorTable[author.toLowerCase()] = 400000 }
+            globalObj.donorTable[author.toLowerCase()] += myMeat() - prevMeat;
         }
         kmail(author, "yo thanks for helping out!", 0, "yo thanks for helping out!")
 
@@ -52,9 +52,9 @@ function main(sender, message) {
                 var meatmatch = contents.match(/>You gain (.*) Meat\.</)
                 if (meatmatch) {
                     print("i gotta add stuff to the donor table")
-                    if (!globalObj.donorTable[sender.toLowerCase()]) { globalObj.donorTable[sender.toLowerCase()] = 400000 }
+                    if (!globalObj.donorTable[author.toLowerCase()]) { globalObj.donorTable[author.toLowerCase()] = 400000 }
                     var meat = parseInt(meatmatch[1].replace(/,/g, ""))
-                    globalObj.donorTable[sender.toLowerCase()] += meat;
+                    globalObj.donorTable[author.toLowerCase()] += meat;
                 }
                 contents = contents.replace(/<br>/g, "\n")
                 contents = contents.replace(/<.*?>/g, "")
