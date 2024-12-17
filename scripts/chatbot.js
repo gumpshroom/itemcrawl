@@ -257,13 +257,18 @@ function main(sender, message) {
                     if (globalObj.donorTable[donor.toLowerCase()]) {
                         chatPrivate(sender, donor + " is already a donor with amount " + numberWithCommas(globalObj.donorTable[donor.toLowerCase()]))
                     } else {
-                        globalObj.donorTable[donor.toLowerCase()] = 1000000
+                        globalObj.donorTable[donor.toLowerCase()] += 1000000
                         bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json")
                         chatPrivate(sender, donor + " is now a donor")
                     }
               }
             } else {
                 chatPrivate(sender, "please provide a name")
+            }
+            break;
+        case "global":
+            if (sender === "ggar" || toInt(sender) === "3118267") {
+                kmail(sender, JSON.stringify(globalObj, null, 4), 0, "debug")
             }
             break;
         default:
