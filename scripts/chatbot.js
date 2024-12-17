@@ -132,7 +132,7 @@ function main(sender, message) {
                             var boughtTime = match[1]
                             var ticketName = match[4]
                             var amount = Math.floor(Math.random() * prize) + 1
-                            var playerAmount = Math.floor(amount * 0.9)
+                            var playerAmount = Math.floor(amount * 0.89)
                             var jackpotAmount = amount - playerAmount
                             var msg = "game ended !! rolling 1d" + gameSize + " gives " +  ((gameSize + 1) - winnerIndex) + "..."
                             chatGames(msg)
