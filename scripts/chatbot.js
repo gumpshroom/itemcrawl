@@ -1,11 +1,13 @@
 Object.assign(globalThis, require("kolmafia"));
 const GAME_TIME = 5; //minutes
-var ticketList = ["small box", "large box", "jumping horseradish", "perfect cosmopolitan", "perfect dark and stormy", "perfect mimosa", "perfect negroni", "perfect old-fashioned", "perfect paloma", "Sacramento wine", "hacked gibson", "red pixel potion", "octolus oculus", "spooky hi mein", "stinky hi mein", "hot hi mein", "cold hi mein", "sleazy hi mein", "zombie", "elemental caipiroska", "perfect ice cube", "golden gum", "snow berries", "Game Grid ticket", "scrumptious reagent", "milk of magnesium", "tiny bottle of absinthe", "Bloody Nora", "llama lama gong", "van key", "tattered scrap of paper", "ice harvest"]
+var ticketList = ["red drunki-bear", "yellow drunki-bear", "green drunki-bear", "gnocchetti di Nietzsche", "glistening fish meat", "gingerbread nylons", "ghostly ectoplasn", "frozen danish", "frat brats", "expired MRE", "enticing mayolus", "eagle's milk", "crudles", "cream of pointy mushroom soup", "chaos popcorn", "candy carrot", "bowl of prescription candy", "bowl of maggots", "badass pie", "alien sandwich", "small box", "large box", "jumping horseradish", "perfect cosmopolitan", "perfect dark and stormy", "perfect mimosa", "perfect negroni", "perfect old-fashioned", "perfect paloma", "Sacramento wine", "hacked gibson", "red pixel potion", "octolus oculus", "spooky hi mein", "stinky hi mein", "hot hi mein", "cold hi mein", "sleazy hi mein", "zombie", "elemental caipiroska", "perfect ice cube", "golden gum", "snow berries", "Game Grid ticket", "scrumptious reagent", "milk of magnesium", "tiny bottle of absinthe", "Bloody Nora", "llama lama gong", "van key", "tattered scrap of paper", "ice harvest"]
 var runningGame = false
 var oldData = fileToBuffer("./ggamesGlobalObj.json")
 var globalObj = oldData ? JSON.parse(oldData) : {}
 globalObj.gamesCount = globalObj.gamesCount ? globalObj.gamesCount : 0
-
+globalObj.donorTable = globalObj.donorTable ? globalObj.donorTable : [{"fargblabble": 10000000}, {"junem": 10000000}, {"pandamanster": 10000000}, {"skent": 10000000}]
+globalObj.jackpotStreak = globalObj.jackpotStreak ? globalObj.jackpotStreak : 0
+globalObj.jackpot = globalObj.jackpot ? globalObj.jackpot : 0
 function uneffect(str) {
     cliExecute("uneffect " + str)
 }
@@ -18,6 +20,7 @@ function main(sender, message) {
     if (message.includes("New message received from")) {
         //open package
         var author = message.match(/New message received from (.*)/)[1]
+        var prevMeat = myMeat()
         use(Item.get("plain brown wrapper"))
         use(Item.get("less-than-three-shaped box"))
         use(Item.get("exactly-three-shaped box"))
@@ -30,7 +33,11 @@ function main(sender, message) {
         use(Item.get("refrigerated biohazard container"))
         use(Item.get("magnetic field"))
         use(Item.get("black velvet box"))
-        kmail(author, "yo thanks", 0, "yo thanks")
+        if (myMeat() > prevMeat) {
+            if (!globalObj.donorTable[sender.toLowerCase()]) { globalObj.donorTable[sender.toLowerCase()] = 400000 }
+            globalObj.donorTable[sender.toLowerCase()] += myMeat() - prevMeat;
+        }
+        kmail(author, "yo thanks for helping out!", 0, "yo thanks for helping out!")
 
         if (author !== "Peace and Love") {
             var msg = visitUrl("messages.php")
@@ -40,12 +47,19 @@ function main(sender, message) {
             if (match) {
                 var date = match[1]
                 var contents = match[2]
+                var meatmatch = contents.match(/<td valign="center">You gain (.*) Meat.<\/td>/)
+                if (meatmatch) {
+                    if (!globalObj.donorTable[sender.toLowerCase()]) { globalObj.donorTable[sender.toLowerCase()] = 400000 }
+                    var meat = parseInt(meatmatch[1].replace(/,/g, ""))
+                    globalObj.donorTable[sender.toLowerCase()] += meat;
+                }
                 contents = contents.replace(/<br>/g, "\n")
                 contents = contents.replace(/<.*?>/g, "")
                 var replyStr = author + " said at " + date + ":\n" + contents
                 kmail("ggar", replyStr, 0, "reply")
             }
         }
+        bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json")
 
         return
     } else if(message.includes("has hit you") || message.includes("sent you a really") || message.includes("plastered you") || message.includes("has blessed")) {
@@ -79,12 +93,12 @@ function main(sender, message) {
         case "host":
             var prize = parseInt(args[0])
             print(myMeat())
-            var validPrice = prize && prize > 0 && prize <= 200000 && myMeat() + 50 >= prize
+            var validPrice = prize && prize > 0 && prize <= 200000 && (myMeat() - globalObj.jackpot) + 50 >= prize
             if (sender === "ggar" || toInt(sender) === "3118267") {
-                validPrice = prize && prize > 0 && myMeat() + 50 >= prize
-            } else if (sender.toLowerCase() === "fargblabble" || sender.toLowerCase() === "junem" || sender.toLowerCase() === "pandamanster" || sender.toLowerCase === "skent") {
+                validPrice = prize && prize > 0 && (myMeat() - globalObj.jackpot) + 50 >= prize
+            } else if (globalObj.donorTable[sender.toLowerCase()]) {
                 //fargblabble, junem, pandamanster
-                validPrice = prize && prize > 0 && prize <= 5000000 && myMeat() + 50 >= prize
+                validPrice = prize && prize > 0 && prize <= (Math.floor(globalObj.donorTable[sender.toLowerCase()] / 2)) && (myMeat() - globalObj.jackpot) + 50 >= prize
             }
             if (validPrice) { //50 meat for package, if winner in ronin
                 var foundItem = false;
@@ -115,13 +129,31 @@ function main(sender, message) {
                             var boughtTime = match[1]
                             var ticketName = match[4]
                             var amount = Math.floor(Math.random() * prize) + 1
+                            var playerAmount = Math.floor(amount * 0.9)
+                            var jackpotAmount = amount - playerAmount
                             var msg = "game ended !! rolling 1d" + gameSize + " gives " +  ((gameSize + 1) - winnerIndex) + "..."
                             chatGames(msg)
                             wait(5)
                             globalObj.gamesCount++
-                            msg = winner + " bought " + match[3] + " " + ticketName + " at " + boughtTime + " and won " + numberWithCommas(amount) + " meat. "
-                            msg += "congrats on ggame #" + numberWithCommas(globalObj.gamesCount) + "!!"
+                            msg = winner + " bought " + match[3] + " " + ticketName + " at " + boughtTime + " and won " + numberWithCommas(playerAmount) + " meat. "
+                            msg += numberWithCommas(jackpotAmount) + " meat has been added to the jackpot, "
+                            msg += "rolling 1d" + numberWithCommas(20 - (globalObj.jackpotStreak > 15 ? 15 : globalObj.jackpotStreak)) + " for the jackpot..."
+                            globalObj.jackpot += jackpotAmount
                             chatGames(msg)
+                            wait(2)
+                            var jackpotRoll = Math.floor(Math.random() * (20 - (globalObj.jackpotStreak > 15 ? 15 : globalObj.jackpotStreak))) + 1
+                            if (jackpotRoll === 1) {
+                                globalObj.jackpotStreak = 0
+                                jackpotmsg += "rolled a 1!! JACKPOT!! " + numberWithCommas(globalObj.jackpot) + " meat has been won by " + winner + "!!"
+                                print(kmail(winner, "you won the jackpot of " + numberWithCommas(globalObj.jackpot) + " meat!!", globalObj.jackpot, '"ggames is the best"'))
+                                globalObj.jackpot = 0
+                            } else {
+                                globalObj.jackpotStreak++
+                                jackpotmsg += "rolled a " + jackpotRoll + " on a 1d" + numberWithCommas(100 - (globalObj.jackpotStreak > 15 ? 15 : globalObj.jackpotStreak)) + " (payout on 1). pot is now at " + numberWithCommas(globalObj.jackpot) + " meat. the last win was " + numberWithCommas(jackpotStreak) + " ggames ago. better luck next time..."
+                            }
+                            jackpotmsg += "congrats on ggame #" + numberWithCommas(globalObj.gamesCount) + "!!"
+                            chatGames(jackpotmsg)
+                            
                             
                             bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json")
                             //kmail
@@ -133,7 +165,7 @@ function main(sender, message) {
                             } else {
                                 cliExecute("csend " + amount + " meat to " + winner + "|you won!!!")
                             }*/
-                            print(kmail(winner, "you won ggame #" + numberWithCommas(globalObj.gamesCount) + "!!", amount, '"ggames is the best"'))
+                            print(kmail(winner, "you won ggame #" + numberWithCommas(globalObj.gamesCount) + "!!", playerAmount, '"ggames is the best"'))
                             break
                         }
                         cycles++;
@@ -193,8 +225,27 @@ function main(sender, message) {
         case "breakthebank":
             
             break;
+        case "hostlimit":
+            chatPrivate(sender, "you are allowed to request games of up to " + globalObj.donorTable[sender.toLowerCase()] ? numberWithCommas(globalObj.donorTable[sender.toLowerCase()]) : '200,000' + " meat..")
+            break;
         case "howmanygames":
             chatPrivate(sender, "i have hosted " + numberWithCommas(globalObj.gamesCount) + " ggames so far!!")
+            break;
+        case "donor":
+            if (args.length > 0) {
+                if (sender === "ggar" || toInt(sender) === "3118267") {
+                    var donor = args[0]
+                    if (globalObj.donorTable[donor.toLowerCase()]) {
+                        chatPrivate(sender, donor + " is already a donor with amount " + numberWithCommas(globalObj.donorTable[donor.toLowerCase()]))
+                    } else {
+                        globalObj.donorTable[donor.toLowerCase()] = 1000000
+                        bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json")
+                        chatPrivate(sender, donor + " is now a donor")
+                    }
+              }
+            } else {
+                chatPrivate(sender, "please provide a name")
+            }
             break;
         default:
             chatPrivate(sender, "??? i dont know that command")
