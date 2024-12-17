@@ -255,7 +255,7 @@ function main(sender, message) {
         case "donor":
             if (args.length > 0) {
                 if (sender === "ggar" || toInt(sender) === "3118267") {
-                    var donor = args[0]
+                    var donor = args.join(" ")
                     if (globalObj.donorTable[donor.toLowerCase()]) {
                         chatPrivate(sender, donor + " is already a donor with amount " + numberWithCommas(globalObj.donorTable[donor.toLowerCase()]))
                     } else {
