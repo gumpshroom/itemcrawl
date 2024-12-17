@@ -226,7 +226,12 @@ function main(sender, message) {
             
             break;
         case "hostlimit":
-            chatPrivate(sender, "you are allowed to request games of up to " + globalObj.donorTable[sender.toLowerCase()] ? numberWithCommas(globalObj.donorTable[sender.toLowerCase()]) : '200,000' + " meat..")
+            var entry = globalObj.donorTable[sender.toLowerCase()]
+            if (entry) {
+                chatPrivate(sender, "you are allowed to host games of up to " + numberWithCommas(Math.floor(entry / 2)) + " meat..")
+            } else {
+                chatPrivate(sender, "you are allowed to host games of up to 200,000 meat..")
+            }
             break;
         case "howmanygames":
             chatPrivate(sender, "i have hosted " + numberWithCommas(globalObj.gamesCount) + " ggames so far!!")
