@@ -49,8 +49,7 @@ function main(sender, message) {
                 var contents = match[2]
                 print(contents)
                 print("does the meat match?")
-                var meatmatch = contents.match(/<td valign="center">You gain (.*) Meat\.<\/td>/)
-                print(meatmatch)
+                var meatmatch = contents.match(/>You gain (.*) Meat\.</)
                 if (meatmatch) {
                     print("i gotta add stuff to the donor table")
                     if (!globalObj.donorTable[sender.toLowerCase()]) { globalObj.donorTable[sender.toLowerCase()] = 400000 }
