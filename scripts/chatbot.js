@@ -33,10 +33,6 @@ function main(sender, message) {
         use(Item.get("refrigerated biohazard container"))
         use(Item.get("magnetic field"))
         use(Item.get("black velvet box"))
-        if (myMeat() > prevMeat) {
-            if (!globalObj.donorTable[author.toLowerCase()]) { globalObj.donorTable[author.toLowerCase()] = 400000 }
-            globalObj.donorTable[author.toLowerCase()] += myMeat() - prevMeat;
-        }
         kmail(author, "yo thanks for helping out!", 0, "yo thanks for helping out!")
 
         if (author !== "Peace and Love") {
@@ -114,12 +110,12 @@ function main(sender, message) {
         case "host":
             var prize = parseInt(args[0].slice(0, args[0].length - 1) + args[0].charAt(args[0].length - 1).replace("k", "000").replace("m", "000000"))
             print(myMeat())
-            var validPrice = prize && prize > 0 && prize <= 200000 && (myMeat() - globalObj.jackpot) + 50 >= prize
+            var validPrice = prize && prize > 50000 && prize <= 200000 && (myMeat() - globalObj.jackpot) + 50 >= prize
             if (sender === "ggar" || toInt(sender) === "3118267") {
-                validPrice = prize && prize > 0 && (myMeat() - globalObj.jackpot) + 50 >= prize
+                validPrice = prize && prize > 50000 && (myMeat() - globalObj.jackpot) + 50 >= prize
             } else if (globalObj.donorTable[sender.toLowerCase()]) {
                 //fargblabble, junem, pandamanster
-                validPrice = prize && prize > 0 && prize <= (Math.floor(globalObj.donorTable[sender.toLowerCase()] / 2)) && (myMeat() - globalObj.jackpot) + 50 >= prize
+                validPrice = prize && prize > 50000 && prize <= (Math.floor(globalObj.donorTable[sender.toLowerCase()] / 2)) && (myMeat() - globalObj.jackpot) + 50 >= prize
             }
             if (validPrice) { //50 meat for package, if winner in ronin
                 var foundItem = false;
