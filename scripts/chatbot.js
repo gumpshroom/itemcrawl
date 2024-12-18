@@ -149,11 +149,11 @@ function main(sender, message) {
                             globalObj.gamesCount++
                             msg = winner + " bought " + match[3] + " " + ticketName + " at " + boughtTime + " and won " + numberWithCommas(playerAmount) + " meat. "
                             msg += numberWithCommas(jackpotAmount) + " meat has been added to the jackpot, "
-                            msg += "rolling 1d" + numberWithCommas(30 - (globalObj.jackpotStreak > 25 ? 25 : globalObj.jackpotStreak)) + " for the jackpot..."
+                            msg += "rolling 1d" + numberWithCommas(50 - (globalObj.jackpotStreak > 45 ? 45 : globalObj.jackpotStreak)) + " for the jackpot..."
                             globalObj.jackpot += jackpotAmount
                             chatGames(msg)
                             wait(5)
-                            var jackpotRoll = Math.floor(Math.random() * (30 - (globalObj.jackpotStreak > 25 ? 25 : globalObj.jackpotStreak))) + 1
+                            var jackpotRoll = Math.floor(Math.random() * (50 - (globalObj.jackpotStreak > 45 ? 45 : globalObj.jackpotStreak))) + 1
                             var jackpotmsg = ""
                             if (jackpotRoll === 1) {
                                 globalObj.jackpotStreak = 0
@@ -162,7 +162,7 @@ function main(sender, message) {
                                 globalObj.jackpot = 0
                             } else {
                                 
-                                jackpotmsg += "rolled a " + jackpotRoll + " on a 1d" + numberWithCommas(30 - (globalObj.jackpotStreak > 25 ? 25 : globalObj.jackpotStreak) + 1) + " (payout on 1). pot is now at " + numberWithCommas(globalObj.jackpot) + " meat. the last win was " + numberWithCommas(globalObj.jackpotStreak) + " ggames ago. better luck next time..."
+                                jackpotmsg += "rolled a " + jackpotRoll + " on a 1d" + numberWithCommas(50 - (globalObj.jackpotStreak > 45 ? 45 : globalObj.jackpotStreak)) + " (payout on 1). pot is now at " + numberWithCommas(globalObj.jackpot) + " meat. the last win was " + numberWithCommas(globalObj.jackpotStreak) + " ggames ago. better luck next time..."
                                 globalObj.jackpotStreak++
                             }
                             jackpotmsg += "congrats on ggame #" + numberWithCommas(globalObj.gamesCount) + "!!"
