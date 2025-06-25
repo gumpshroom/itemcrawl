@@ -286,11 +286,15 @@ function main(sender, message) {
             if (sender === "ggar" || toInt(sender) === "3118267") {
                 for (var i = 0; i < ticketList.length; i++) {
                     try {
-                        buy(args.length > 0 ? parseInt(args[0]) : 100, Item.get(ticketList[i]))
-                        print("bought " + ticketList[i])
-                        chatPrivate(sender, "bought " + ticketList[i] + " x" + (args.length > 0 ? parseInt(args[0]) : 100))
+                        if (itemAmount(ticketList[i]) < 50) {
+                            buy(args.length > 0 ? parseInt(args[0]) : 100, Item.get(ticketList[i]))
+                            print("bought " + ticketList[i])
+                            chatPrivate(sender, "bought " + ticketList[i] + " x" + (args.length > 0 ? parseInt(args[0]) : 100))
+                        } else {
+                            chatPrivate(sender, "skipped " + ticketList[i] + " (more than 50 left)")
+                        }
                     } catch(e) {
-                        print(e)
+                        chatPrivate(sender, e)
                     }
                 }
             } else {
