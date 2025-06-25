@@ -309,8 +309,8 @@ function main(sender, message) {
             break;
         case "hostlimit":
             var personal = globalObj.donorTable[sender.toLowerCase()];
-            var msg = "you may host up to 300k per day from the public pool (if available) :]";
-            if (personal) msg += " you also have " + numberWithCommas(personal.allocated) + " meat available from your personal donations.. thank you!!";
+            var msg = "you have " + numberWithCommas(300000 - globalObj.publicPoolUsage[sender.toLowerCase()].used) + " daily free host remaining. ";
+            if (personal) msg += " you also have " + numberWithCommas(personal.allocated) + " meat allocated.. you have donated a total of " + numberWithCommas(personal.total) + "!! thank you!!";
             chatPrivate(sender, msg);
             break;
         case "howmanygames":
