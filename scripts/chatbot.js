@@ -298,7 +298,7 @@ function main(sender, message) {
             }
             break;
         case "howmuchmeat":
-            chatPrivate(sender, "i have " + numberWithCommas(myMeat()) + " meat...")
+            chatPrivate(sender, "i have " + numberWithCommas(myMeat()) + " meat, " + numberWithCommas(globalObj.jackpot) + " is jackpot, " + numberWithCommas(globalObj.publicPool) + " is public..")
             break;
         case "breakthebank":
             
