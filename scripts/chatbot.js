@@ -5,9 +5,20 @@ var runningGame = false
 var oldData = fileToBuffer("./ggamesGlobalObj.json")
 var globalObj = oldData ? JSON.parse(oldData) : {}
 globalObj.gamesCount = globalObj.gamesCount ? globalObj.gamesCount : 0
-globalObj.donorTable = globalObj.donorTable ? globalObj.donorTable : {"fargblabble": 10000000, "junem": 10000000, "pandamanster": 10000000, "skent": 10000000}
+globalObj.donorTable = globalObj.donorTable ? globalObj.donorTable : {}
+globalObj.publicPool = globalObj.publicPool ? globalObj.publicPool : 0
+globalObj.publicPoolUsage = globalObj.publicPoolUsage ? globalObj.publicPoolUsage : {}
 globalObj.jackpotStreak = globalObj.jackpotStreak ? globalObj.jackpotStreak : 0
 globalObj.jackpot = globalObj.jackpot ? globalObj.jackpot : 0
+function todayStr() {
+    var d = new Date();
+    var year = d.getFullYear();
+    var month = String(d.getMonth() + 1);
+    if (month.length === 1) month = "0" + month;
+    var day = String(d.getDate());
+    if (day.length === 1) day = "0" + day;
+    return year + "-" + month + "-" + day;
+}
 function uneffect(str) {
     cliExecute("uneffect " + str)
 }
@@ -48,9 +59,14 @@ function main(sender, message) {
                 var meatmatch = contents.match(/>You gain (.*) Meat\.</)
                 if (meatmatch) {
                     print("i gotta add stuff to the donor table")
-                    if (!globalObj.donorTable[author.toLowerCase()]) { globalObj.donorTable[author.toLowerCase()] = 400000 }
-                    var meat = parseInt(meatmatch[1].replace(/,/g, ""))
-                    globalObj.donorTable[author.toLowerCase()] += meat;
+                   if (!globalObj.donorTable[author.toLowerCase()]) {
+                       globalObj.donorTable[author.toLowerCase()] = { total: 0, allocated: 0 };
+                   }
+                    var meat = parseInt(meatmatch[1].replace(/,/g, ""));
+                    globalObj.donorTable[author.toLowerCase()].total += meat;
+                    var alloc = Math.floor(meat * 0.75);
+                    globalObj.donorTable[author.toLowerCase()].allocated += alloc;
+                    globalObj.publicPool = (globalObj.publicPool || 0) + (meat - alloc);
                 }
                 contents = contents.replace(/<br>/g, "\n")
                 contents = contents.replace(/<.*?>/g, "")
@@ -110,12 +126,54 @@ function main(sender, message) {
         case "host":
             var prize = parseInt(args[0].slice(0, args[0].length - 1) + args[0].charAt(args[0].length - 1).replace("k", "000").replace("m", "000000"))
             print(myMeat())
-            var validPrice = prize && prize > 50000 && prize <= 200000 && (myMeat() - globalObj.jackpot) + 50 >= prize
+            
+            // Check if bot has enough total meat (jackpot + prize + buffer)
+            var botHasEnoughMeat = (myMeat() - globalObj.jackpot) + 50 >= prize;
+            if (!botHasEnoughMeat) {
+               chatPrivate(sender, "i dont have enough meat or the prize amount is invalid. (i have " + numberWithCommas(myMeat()) + " meat)");
+               break;
+            }
+
+            var validPrice = false; // Start with false
+            
+            // Basic prize validation
+            if (!prize || prize < 50000) {
+               chatPrivate(sender, "invalid prize amount (must be > 50,000)");
+               break;
+            }
+
+            // Admin/ggar bypass (same as before, but simplified)
             if (sender === "ggar" || toInt(sender) === "3118267") {
-                validPrice = prize && prize > 50000 && (myMeat() - globalObj.jackpot) + 50 >= prize
-            } else if (globalObj.donorTable[sender.toLowerCase()]) {
-                //fargblabble, junem, pandamanster
-                validPrice = prize && prize > 50000 && prize <= (Math.floor(globalObj.donorTable[sender.toLowerCase()] / 2)) && (myMeat() - globalObj.jackpot) + 50 >= prize
+               validPrice = true;
+            } else {
+               // New funding system for everyone else
+               
+               // Initialize public pool usage tracking
+               if (!globalObj.publicPoolUsage) globalObj.publicPoolUsage = {};
+               if (!globalObj.publicPoolUsage[sender.toLowerCase()] || globalObj.publicPoolUsage[sender.toLowerCase()].date !== todayStr()) {
+                  globalObj.publicPoolUsage[sender.toLowerCase()] = { date: todayStr(), used: 0 };
+               }
+               var pubUsed = globalObj.publicPoolUsage[sender.toLowerCase()].used || 0;
+
+               // Try public pool first (300k/day limit)
+               if (pubUsed + prize <= 300000 && (globalObj.publicPool || 0) >= prize) {
+                  validPrice = true;
+                  // Deduct from public pool
+                  globalObj.publicPool -= prize;
+                  globalObj.publicPoolUsage[sender.toLowerCase()].used += prize;
+               } else {
+                  // Fallback to personal allocation
+                  var donor = globalObj.donorTable[sender.toLowerCase()];
+                  if (donor && donor.allocated >= prize) {
+                     validPrice = true;
+                     // Deduct from personal allocation
+                     globalObj.donorTable[sender.toLowerCase()].allocated -= prize;
+                  }
+               }
+
+               if (!validPrice) {
+                  chatPrivate(sender, "...not have enough hosting funds. u may host up to 300k per day from public pool or use ur allocated funds from donations..");
+               }
             }
             if (validPrice) { //50 meat for package, if winner in ronin
                 var foundItem = false;
@@ -204,7 +262,7 @@ function main(sender, message) {
                     chatPrivate(sender, "game already running")
                 }
             } else {
-                chatPrivate(sender, "i dont have enough meat or the prize amount is invalid. (i have " + numberWithCommas(myMeat()) + " meat)")
+                chatPrivate(sender, "i dont have enough meat or prize amt is invalid. (i have " + numberWithCommas(myMeat()) + " meat, " + numberWithCommas(globalObj.jackpot) + " is jackpot, " + numberWithCommas(globalObj.publicPool) + " is public)")
             }
             break;
         case "roll":
@@ -246,12 +304,10 @@ function main(sender, message) {
             
             break;
         case "hostlimit":
-            var entry = globalObj.donorTable[sender.toLowerCase()]
-            if (entry) {
-                chatPrivate(sender, "you are allowed to host games of up to " + numberWithCommas(Math.floor(entry / 2)) + " meat..")
-            } else {
-                chatPrivate(sender, "you are allowed to host games of up to 200,000 meat..")
-            }
+            var personal = globalObj.donorTable[sender.toLowerCase()];
+            var msg = "you may host up to 300k per day from the public pool (if available) :]";
+            if (personal) msg += " you also have " + numberWithCommas(personal.allocated) + " meat available from your personal donations.. thank you!!";
+            chatPrivate(sender, msg);
             break;
         case "howmanygames":
             chatPrivate(sender, "i have hosted " + numberWithCommas(globalObj.gamesCount) + " ggames so far!!")
@@ -270,18 +326,18 @@ function main(sender, message) {
             break;
         case "donor":
             if (args.length > 0) {
-                if (sender === "ggar" || toInt(sender) === "3118267") {
-                    var donor = args.join(" ")
-                    if (globalObj.donorTable[donor.toLowerCase()]) {
-                        chatPrivate(sender, donor + " is already a donor with amount " + numberWithCommas(globalObj.donorTable[donor.toLowerCase()]))
-                    } else {
-                        globalObj.donorTable[donor.toLowerCase()] += 1000000
-                        bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json")
-                        chatPrivate(sender, donor + " is now a donor")
-                    }
-              }
+               if (sender === "ggar" || toInt(sender) === "3118267") {
+                  var donor = args.join(" ")
+                  var entry = globalObj.donorTable[donor.toLowerCase()];
+                  if (entry) {
+                     chatPrivate(sender, donor + " has contributed a total of " + numberWithCommas(entry.total) +
+                        " meat and has " + numberWithCommas(entry.allocated) + " meat available for personal hosting.");
+                  } else {
+                     chatPrivate(sender, donor + " is not a donor.");
+                  }
+               }
             } else {
-                chatPrivate(sender, "please provide a name")
+               chatPrivate(sender, "please provide a name")
             }
             break;
         case "global":
