@@ -309,7 +309,7 @@ function main(sender, message) {
             break;
         case "hostlimit":
             var personal = globalObj.donorTable[sender.toLowerCase()];
-            var msg = "you have " + numberWithCommas(300000 - globalObj.publicPoolUsage[sender.toLowerCase()].used) + " daily free host remaining. ";
+            var msg = "you have " + numberWithCommas(300000 - (globalObj.publicPoolUsage[sender.toLowerCase()].used || 0)) + " daily free host remaining. ";
             if (personal) msg += " you also have " + numberWithCommas(personal.allocated) + " meat allocated.. you have donated a total of " + numberWithCommas(personal.total) + "!! thank you!!";
             chatPrivate(sender, msg);
             break;
