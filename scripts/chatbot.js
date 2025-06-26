@@ -1,10 +1,12 @@
 Object.assign(globalThis, require("kolmafia"));
-const raffle = require("../modules/raffleGame.js");
-const decoy  = require("../modules/decoyGame.js");
-const utils  = require("../modules/gameUtils.js");
+const raffle = require("./modules/raffleGame.js");
+const decoy  = require("./modules/decoyGame.js");
+const utils  = require("./modules/gameUtils.js");
 
 // load or init globalObj
 var oldData = fileToBuffer("./ggamesGlobalObj.json");
+var auth = fileToBuffer("./auth.json")
+auth = auth ? JSON.parse(auth) : {};
 var globalObj = oldData ? JSON.parse(oldData) : {};
 globalObj.gamesCount      = globalObj.gamesCount || 0;
 globalObj.donorTable      = globalObj.donorTable || {};
@@ -12,6 +14,40 @@ globalObj.publicPool      = globalObj.publicPool || 0;
 globalObj.publicPoolUsage = globalObj.publicPoolUsage || {};
 globalObj.jackpotStreak   = globalObj.jackpotStreak || 0;
 globalObj.jackpot         = globalObj.jackpot || 0;
+
+importPackage(java.net);
+importPackage(java.io);
+
+function postJSON(urlString, dataObj) {
+  // Convert data object to JSON
+  let jsonData = JSON.stringify(dataObj);
+
+  // Open connection
+  let url = new URL(urlString);
+  let connection = url.openConnection();
+  connection.setRequestMethod("POST");
+
+  // Set headers
+  connection.setRequestProperty("Content-Type", "application/json");
+  connection.setDoOutput(true);
+
+  // Write the JSON data
+  let writer = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
+  writer.write(jsonData);
+  writer.flush();
+  writer.close();
+
+  // Read response
+  let reader = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
+  let response = "";
+  let line;
+  while ((line = reader.readLine()) != null) {
+    response += line + "\n";
+  }
+  reader.close();
+
+  return response;
+}
 
 function todayStr() {
   var d = new Date();
@@ -26,12 +62,29 @@ function todayStr() {
 function fetchQnA() {
   try {
     // Replace with your actual Gemini API endpoint and key
-    var prompt = encodeURIComponent(
-      "Return only valid JSON in this exact format: {\"question\":\"your trivia question here\", \"realAnswer\":\"the correct answer here\"} for an obscure trivia question. No other text."
-    );
-    var apiKey = "YOUR_GEMINI_API_KEY_HERE"; // Replace with actual key
-    var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + apiKey;
+    var prompt = "Return only valid JSON in this exact format: {\"question\":\"your trivia question here\", \"realAnswer\":\"the correct answer here\"} for an obscure trivia question. No other text."
     
+    var apiKey = auth.gemini; // Replace with actual key
+    var url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + apiKey;
+    var result = postJSON(url, {
+      contents: [
+        {
+          parts: [
+            {
+              text: prompt
+            }
+          ]
+        }
+      ]
+    })
+    try {
+      JSON.parse(result)
+      return JSON.parse(result)
+    } catch (e) {
+      utils.reportError("fetchQnA", e, "ggar")
+      //wasn't json, try again
+      fetchQnA()
+    }
     // For now, return fallback since we need real API setup
     return { question: "What is the rarest element on Earth's crust?", realAnswer: "astatine" };
   } catch(e) {
