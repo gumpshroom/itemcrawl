@@ -2,8 +2,8 @@
 Object.assign(globalThis, require("kolmafia"));
 
 // Rhino Java timers
-var Timer = Packages.java.util.Timer;
-var TimerTask = Packages.java.util.TimerTask;
+importPackage(java.util.Timer)
+importPackage(java.util.TimerTask)
 
 // Game duration (minutes)
 var GAME_TIME = 5;
