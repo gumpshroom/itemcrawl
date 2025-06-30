@@ -42,7 +42,7 @@ function getMallStore(playerID) {
     }
     //bufferToFile(store, "./store.txt")
     print("Store has max price! " + playerID);
-    var priceList = store.match(/<td valign=center><b>([^<]*)<\/b> \(([^<]*)\) [^<]*<\/td><td>999,999,999 Meat<\/td>/gm)
+    var priceList = store.match(/<td valign="center"><b>([^<]*)<\/b> \(([^<]*)\) [^<]*<\/td><td>999,999,999 Meat<\/td>/gm)
     if (!priceList) { 
         bufferToFile(store, "./store.txt")
         print("something went wrong?")
@@ -50,7 +50,7 @@ function getMallStore(playerID) {
     }
     //print(priceList.join("\n"))
     for (var i = 0; i < priceList.length; i++) {
-        var match = priceList[i].match(/<td valign=center><b>([^<]*)<\/b> \(([^<]*)\) [^<]*<\/td><td>999,999,999 Meat<\/td>/)
+        var match = priceList[i].match(/<td valign="center"><b>([^<]*)<\/b> \(([^<]*)\) [^<]*<\/td><td>999,999,999 Meat<\/td>/)
         var item = match[1]
         var qty = match[2]
         if (mallPrice(toItem(item)) == -1) {
