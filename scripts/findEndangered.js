@@ -8,7 +8,7 @@ if (start)
     print("Starting from " + start)
 if (!start || start < 0)
     start = 1
-for (var i = start; i <= 3700000; i++) {
+for (var i = start; i <= 3799000; i++) {
     if (i % 1000 == 0) {
         print("-----FINISHED #" + i + "-----")
     }
