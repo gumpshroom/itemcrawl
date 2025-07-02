@@ -108,7 +108,7 @@ function main(sender, message) {
         case "setdonorlevel":
             if (args.length > 1) {
                 if (sender === "ggar") {
-                    globalObj.donorTable[args.slice(1).join(" ").toLowerCase()] = parseInt(args[0]);
+                    globalObj.publicPoolUsage[args.slice(1).join(" ").toLowerCase()] = parseInt(args[0]);
                     bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json");
                     chatPrivate("ggar", "set " + args.slice(1).join(" ").toLowerCase() + " donor level to " + numberWithCommas(parseInt(args[0])));
                 }
@@ -167,7 +167,7 @@ function main(sender, message) {
                   if (donor && donor.allocated >= prize) {
                      validPrice = true;
                      // Deduct from personal allocation
-                     globalObj.donorTable[sender.toLowerCase()].allocated -= prize;
+                     
                   }
                }
 
@@ -231,8 +231,11 @@ function main(sender, message) {
                             jackpotmsg += "congrats on ggame #" + numberWithCommas(globalObj.gamesCount) + "!!"
                             chatGames(jackpotmsg)
 
-                            if (isPublic)
+                            if (isPublic) {
                                 globalObj.publicPool -= playerAmount
+                            } else {
+                                globalObj.donorTable[sender.toLowerCase()].allocated -= playerAmount;
+                            }
                             
                             bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json")
                             //kmail
