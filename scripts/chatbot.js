@@ -147,7 +147,7 @@ function main(sender, message) {
                validPrice = true;
             } else {
                // New funding system for everyone else
-               
+               var isPublic = false
                // Initialize public pool usage tracking
                if (!globalObj.publicPoolUsage) globalObj.publicPoolUsage = {};
                if (!globalObj.publicPoolUsage[sender.toLowerCase()] || globalObj.publicPoolUsage[sender.toLowerCase()].date !== todayStr()) {
@@ -159,7 +159,7 @@ function main(sender, message) {
                if (pubUsed + prize <= 300000 && (globalObj.publicPool || 0) >= prize) {
                   validPrice = true;
                   // Deduct from public pool
-                  globalObj.publicPool -= prize;
+                  isPublic = true
                   globalObj.publicPoolUsage[sender.toLowerCase()].used += prize;
                } else {
                   // Fallback to personal allocation
@@ -230,7 +230,9 @@ function main(sender, message) {
                             }
                             jackpotmsg += "congrats on ggame #" + numberWithCommas(globalObj.gamesCount) + "!!"
                             chatGames(jackpotmsg)
-                            
+
+                            if (isPublic)
+                                globalObj.publicPool -= playerAmount
                             
                             bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json")
                             //kmail
@@ -242,6 +244,7 @@ function main(sender, message) {
                             } else {
                                 cliExecute("csend " + amount + " meat to " + winner + "|you won!!!")
                             }*/
+                            
                             print(kmail(winner, "you won ggame #" + numberWithCommas(globalObj.gamesCount) + "!!", playerAmount, '"ggames is the best"'))
                             break
                         }
