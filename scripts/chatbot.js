@@ -156,8 +156,8 @@ function main(sender, message) {
                }
                var pubUsed = globalObj.publicPoolUsage[sender.toLowerCase()].used || 0;
 
-               // Try public pool first (300k/day limit)
-               if (pubUsed + prize <= 300000 && (globalObj.publicPool || 0) >= prize) {
+               // Try public pool first (500k/day limit)
+               if (pubUsed + prize <= 500000 && (globalObj.publicPool || 0) >= prize) {
                   validPrice = true;
                   // Deduct from public pool
                   isPublic = true
@@ -173,7 +173,7 @@ function main(sender, message) {
                }
 
                if (!validPrice) {
-                  chatPrivate(sender, "...not have enough hosting funds. u may host up to 300k per day from public pool or use ur allocated funds from donations..");
+                  chatPrivate(sender, "...not have enough hosting funds. u may host up to 500k per day from public pool or use ur allocated funds from donations..");
                }
             }
             if (validPrice) { //50 meat for package, if winner in ronin
