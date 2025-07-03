@@ -359,6 +359,7 @@ function main(sender, message) {
                     var alloc = Math.min(parseInt(amt), globalObj.donorTable[sender.toLowerCase()].allocated);
                     globalObj.donorTable[sender.toLowerCase()].allocated -= alloc;
                     globalObj.publicPool += alloc;
+                    bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json")
                     chatPrivate(sender, "successfully transferred " + numberWithCommas(alloc) + " meat from your personal allocation to the public pool.");
                 } else {
                     chatPrivate(sender, "invalid amount. please provide a valid number (e.g. 100k or 1m).")
