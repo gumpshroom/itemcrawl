@@ -351,6 +351,20 @@ function main(sender, message) {
                chatPrivate(sender, "please provide a name")
             }
             break;
+        case "makepublic":
+            //transfers from user's personal allocation to public pool (non-admin)
+            if (args.length > 0) {
+                var amt = args[0].replace("k", "000").replace("m", "000000");
+                if (parseInt(amt) && parseInt(amt) > 0) {
+                    var alloc = Math.min(parseInt(amt), globalObj.donorTable[sender.toLowerCase()].allocated);
+                    globalObj.donorTable[sender.toLowerCase()].allocated -= alloc;
+                    globalObj.publicPool += alloc;
+                    chatPrivate(sender, "successfully transferred " + numberWithCommas(alloc) + " meat from your personal allocation to the public pool.");
+                } else {
+                    chatPrivate(sender, "invalid amount. please provide a valid number (e.g. 100k or 1m).")
+                }
+            }
+
         case "global":
             if (sender === "ggar" || toInt(sender) === "3118267") {
                 print(JSON.stringify(globalObj, null, 4))
