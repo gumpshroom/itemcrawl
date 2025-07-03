@@ -44,7 +44,7 @@ function main(sender, message) {
         use(Item.get("refrigerated biohazard container"))
         use(Item.get("magnetic field"))
         use(Item.get("black velvet box"))
-        kmail(author, "yo thanks for helping out!", 0, "yo thanks for helping out!")
+        
 
         if (author !== "Peace and Love") {
             var msg = visitUrl("messages.php")
@@ -67,6 +67,7 @@ function main(sender, message) {
                     var alloc = Math.floor(meat * 0.75);
                     globalObj.donorTable[author.toLowerCase()].allocated += alloc;
                     globalObj.publicPool = (globalObj.publicPool || 0) + (meat - alloc);
+                    kmail(author, "yo thanks for helping out! " + numberWithCommas(alloc) + " Meat has been allocated to for your personal hosting limit (your total allowance: " + numberWithCommas(globalObj.donorTable[author.toLowerCase()].allocated) + " Meat). the rest has been added to the public pool. pm me 'hostlimit' at any time to see this,", 0, "yo thanks for helping out!")
                 }
                 contents = contents.replace(/<br>/g, "\n")
                 contents = contents.replace(/<.*?>/g, "")
