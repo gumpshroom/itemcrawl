@@ -161,7 +161,7 @@ function main(sender, message) {
                   validPrice = true;
                   // Deduct from public pool
                   isPublic = true
-                  globalObj.publicPoolUsage[sender.toLowerCase()].used += prize;
+                  
                } else {
                   // Fallback to personal allocation
                   var donor = globalObj.donorTable[sender.toLowerCase()];
@@ -234,6 +234,7 @@ function main(sender, message) {
 
                             if (isPublic) {
                                 globalObj.publicPool -= playerAmount
+                                globalObj.publicPoolUsage[sender.toLowerCase()].used += playerAmount;
                             } else {
                                 globalObj.donorTable[sender.toLowerCase()].allocated -= playerAmount;
                             }
@@ -316,7 +317,12 @@ function main(sender, message) {
             break;
         case "hostlimit":
             var personal = globalObj.donorTable[sender.toLowerCase()];
-            var msg = "you have " + numberWithCommas(300000 - (globalObj.publicPoolUsage[sender.toLowerCase()] ? globalObj.publicPoolUsage[sender.toLowerCase()].used : 0)) + " daily free host remaining. ";
+            var dailyUsage = globalObj.publicPoolUsage[sender.toLowerCase()]
+            if (!dailyUsage || dailyUsage.date !== todayStr()) {
+                dailyUsage = { date: todayStr(), used: 0 };
+            }
+
+            var msg = "you have " + numberWithCommas(500000 - dailyUsage.used) + " daily free host remaining. ";
             if (personal) msg += " you also have " + numberWithCommas(personal.allocated) + " meat allocated.. you have donated a total of " + numberWithCommas(personal.total) + "!! thank you!!";
             chatPrivate(sender, msg);
             break;
