@@ -156,8 +156,8 @@ function main(sender, message) {
                }
                var pubUsed = globalObj.publicPoolUsage[sender.toLowerCase()].used || 0;
 
-               // Try public pool first (500k/day limit)
-               if (pubUsed + prize <= 500000 && (globalObj.publicPool || 0) >= prize) {
+               // Try public pool first (700k/day limit)
+               if (pubUsed + prize <= 700000 && (globalObj.publicPool || 0) >= prize) {
                   validPrice = true;
                   // Deduct from public pool
                   isPublic = true
@@ -292,6 +292,8 @@ function main(sender, message) {
             break;
         case "restock":
             if (sender === "ggar" || toInt(sender) === "3118267") {
+                var beforeMeat = myMeat()
+                var spent = 0
                 for (var i = 0; i < ticketList.length; i++) {
                     try {
                         if (itemAmount(Item.get(ticketList[i])) < 50) {
@@ -304,7 +306,15 @@ function main(sender, message) {
                     } catch(e) {
                         chatPrivate(sender, e)
                     }
+                    var currMeat = myMeat()
+                    if (beforeMeat - currMeat > 0) {
+                        spent += beforeMeat - currMeat
+                    }
+                    beforeMeat = currMeat
                 }
+                globalObj.publicPool -= spent
+                bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json")
+                chatPrivate(sender, "spent a total of " + numberWithCommas(spent))
             } else {
                 chatPrivate(sender, "hey hey hey wait.. you cant tell me what to do...")
             }
@@ -312,8 +322,8 @@ function main(sender, message) {
         case "howmuchmeat":
             chatPrivate(sender, "i have " + numberWithCommas(myMeat()) + " meat, " + numberWithCommas(globalObj.jackpot) + " is jackpot, " + numberWithCommas(globalObj.publicPool) + " is public..")
             break;
-        case "breakthebank":
-            
+        case "ticketlist":
+            chatPrivate(sender, "my ticket list: https://pastebin.com/rkMzXye9")
             break;
         case "hostlimit":
             var personal = globalObj.donorTable[sender.toLowerCase()];
@@ -322,7 +332,7 @@ function main(sender, message) {
                 dailyUsage = { date: todayStr(), used: 0 };
             }
 
-            var msg = "you have " + numberWithCommas(500000 - dailyUsage.used) + " daily free host remaining. ";
+            var msg = "you have " + numberWithCommas(700000 - dailyUsage.used) + " daily free host remaining. ";
             if (personal) msg += " you also have " + numberWithCommas(personal.allocated) + " meat allocated.. you have donated a total of " + numberWithCommas(personal.total) + "!! thank you!!";
             chatPrivate(sender, msg);
             break;
