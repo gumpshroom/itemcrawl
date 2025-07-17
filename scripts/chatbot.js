@@ -1,6 +1,24 @@
 Object.assign(globalThis, require("kolmafia"));
 const GAME_TIME = 5; //minutes
 var ticketList = ["red drunki-bear", "yellow drunki-bear", "green drunki-bear", "gnocchetti di Nietzsche", "glistening fish meat", "gingerbread nylons", "ghostly ectoplasm", "frozen danish", "frat brats", "expired MRE", "enticing mayolus", "eagle's milk", "crudles", "cream of pointy mushroom soup", "chaos popcorn", "candy carrot", "bowl of prescription candy", "bowl of maggots", "badass pie", "alien sandwich", "small box", "large box", "jumping horseradish", "perfect cosmopolitan", "perfect dark and stormy", "perfect mimosa", "perfect negroni", "perfect old-fashioned", "perfect paloma", "Sacramento wine", "hacked gibson", "red pixel potion", "octolus oculus", "spooky hi mein", "stinky hi mein", "hot hi mein", "cold hi mein", "sleazy hi mein", "zombie", "elemental caipiroska", "perfect ice cube", "golden gum", "snow berries", "Game Grid ticket", "scrumptious reagent", "milk of magnesium", "tiny bottle of absinthe", "Bloody Nora", "llama lama gong", "van key", "tattered scrap of paper", "ice harvest"]
+
+// Help text constants
+var helpTexts = {
+    help: "available commands: help, host, roll, howmuchmeat, ticketlist, hostlimit, howmanygames, jackpot, makepublic. use 'command help' for specific help.",
+    host: "host [amount] - host a ggame with specified meat prize (e.g. host 100k). minimum 50k required. you can use daily free hosting (700k/day) or your personal allocation from donations.",
+    roll: "roll 1d[number] - roll a dice with specified sides (e.g. roll 1d100). add 'in games' to announce in games channel.",
+    howmuchmeat: "howmuchmeat - shows how much meat i have, current jackpot amount, and public pool total.",
+    ticketlist: "ticketlist - shows the list of items used as tickets for ggames.",
+    hostlimit: "hostlimit - shows your daily free hosting limit remaining and any personal allocation from donations.",
+    howmanygames: "howmanygames - shows the total number of ggames i have hosted so far.",
+    jackpot: "jackpot - shows the current jackpot amount and how many games since it was last won.",
+    makepublic: "makepublic [amount] - transfers meat from your personal allocation to the public pool (e.g. makepublic 100k)."
+}
+
+// Helper function to check if help should be shown
+function shouldShowHelp(args, command) {
+    return args.length > 0 && args[0].toLowerCase() === "help";
+}
 var runningGame = false
 var oldData = fileToBuffer("./ggamesGlobalObj.json")
 var globalObj = oldData ? JSON.parse(oldData) : {}
@@ -104,7 +122,7 @@ function main(sender, message) {
             }
             break;
         case "help":
-            chatPrivate(sender, "help me add this help message")
+            chatPrivate(sender, helpTexts.help)
             break;
         case "setdonorlevel":
             if (args.length > 1) {
@@ -125,6 +143,16 @@ function main(sender, message) {
             }
             break;
         case "host":
+            if (shouldShowHelp(args, "host")) {
+                chatPrivate(sender, helpTexts.host);
+                break;
+            }
+            
+            if (args.length === 0) {
+                chatPrivate(sender, "please specify a prize amount. " + helpTexts.host);
+                break;
+            }
+            
             var prize = parseInt(args[0].slice(0, args[0].length - 1) + args[0].charAt(args[0].length - 1).replace("k", "000").replace("m", "000000"))
             print(myMeat())
             
@@ -274,6 +302,11 @@ function main(sender, message) {
             }
             break;
         case "roll":
+            if (shouldShowHelp(args, "roll")) {
+                chatPrivate(sender, helpTexts.roll);
+                break;
+            }
+            
             if (args && args.length > 0 && args[0].startsWith("1d") && parseInt(args[0].split("d")[1]) && !args[0].includes(" ")) {
                 var r = args[0].split("d")[1]
                 var roll = parseInt(r.slice(0, r.length - 1) + r.charAt(r.length - 1).replace("k", "000").replace("m", "000000"))
@@ -287,7 +320,7 @@ function main(sender, message) {
                 }
                 
             } else {
-                chatPrivate(sender, "sorry i dont support anything other than 1d rolls (in development)")
+                chatPrivate(sender, "invalid roll format. " + helpTexts.roll)
             }
             break;
         case "restock":
@@ -320,12 +353,24 @@ function main(sender, message) {
             }
             break;
         case "howmuchmeat":
+            if (shouldShowHelp(args, "howmuchmeat")) {
+                chatPrivate(sender, helpTexts.howmuchmeat);
+                break;
+            }
             chatPrivate(sender, "i have " + numberWithCommas(myMeat()) + " meat, " + numberWithCommas(globalObj.jackpot) + " is jackpot, " + numberWithCommas(globalObj.publicPool) + " is public..")
             break;
         case "ticketlist":
+            if (shouldShowHelp(args, "ticketlist")) {
+                chatPrivate(sender, helpTexts.ticketlist);
+                break;
+            }
             chatPrivate(sender, "my ticket list: https://pastebin.com/rkMzXye9")
             break;
         case "hostlimit":
+            if (shouldShowHelp(args, "hostlimit")) {
+                chatPrivate(sender, helpTexts.hostlimit);
+                break;
+            }
             var personal = globalObj.donorTable[sender.toLowerCase()];
             var dailyUsage = globalObj.publicPoolUsage[sender.toLowerCase()]
             if (!dailyUsage || dailyUsage.date !== todayStr()) {
@@ -337,9 +382,17 @@ function main(sender, message) {
             chatPrivate(sender, msg);
             break;
         case "howmanygames":
+            if (shouldShowHelp(args, "howmanygames")) {
+                chatPrivate(sender, helpTexts.howmanygames);
+                break;
+            }
             chatPrivate(sender, "i have hosted " + numberWithCommas(globalObj.gamesCount) + " ggames so far!!")
             break;
         case "jackpot":
+            if (shouldShowHelp(args, "jackpot")) {
+                chatPrivate(sender, helpTexts.jackpot);
+                break;
+            }
             chatPrivate(sender, "the jackpot is currently at " + numberWithCommas(globalObj.jackpot) + " meat and was last won " + numberWithCommas(globalObj.jackpotStreak) + " ggames ago.")
             break;
         case "send":
@@ -368,19 +421,30 @@ function main(sender, message) {
             }
             break;
         case "makepublic":
+            if (shouldShowHelp(args, "makepublic")) {
+                chatPrivate(sender, helpTexts.makepublic);
+                break;
+            }
             //transfers from user's personal allocation to public pool (non-admin)
             if (args.length > 0) {
                 var amt = args[0].replace("k", "000").replace("m", "000000");
                 if (parseInt(amt) && parseInt(amt) > 0) {
+                    if (!globalObj.donorTable[sender.toLowerCase()] || globalObj.donorTable[sender.toLowerCase()].allocated < parseInt(amt)) {
+                        chatPrivate(sender, "you dont have enough personal allocation for that amount. use 'hostlimit' to check your available allocation.");
+                        break;
+                    }
                     var alloc = Math.min(parseInt(amt), globalObj.donorTable[sender.toLowerCase()].allocated);
                     globalObj.donorTable[sender.toLowerCase()].allocated -= alloc;
                     globalObj.publicPool += alloc;
                     bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json")
                     chatPrivate(sender, "successfully transferred " + numberWithCommas(alloc) + " meat from your personal allocation to the public pool.");
                 } else {
-                    chatPrivate(sender, "invalid amount. please provide a valid number (e.g. 100k or 1m).")
+                    chatPrivate(sender, "invalid amount. " + helpTexts.makepublic)
                 }
+            } else {
+                chatPrivate(sender, "please specify an amount. " + helpTexts.makepublic);
             }
+            break;
 
         case "global":
             if (sender === "ggar" || toInt(sender) === "3118267") {
