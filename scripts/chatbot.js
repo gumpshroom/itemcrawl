@@ -19,6 +19,15 @@ var helpTexts = {
 function shouldShowHelp(args, command) {
     return args.length > 0 && args[0].toLowerCase() === "help";
 }
+
+/*
+ * ALLOCATION TRACKING SYSTEM:
+ * - calculateTotalAllocations(): Sums all user allocations, public pool, and jackpot
+ * - generateAllocationReport(): Creates detailed report and auto-adjusts ggar's allocation if needed
+ * - Admin command 'allocreport': Sends allocation summary to ggar via k-mail
+ * - ggar hosting: Now properly deducts from ggar's allocation like other users
+ * - Auto-adjustment: If total allocations exceed bot's meat, ggar's allocation is reduced automatically
+ */
 var runningGame = false
 var oldData = fileToBuffer("./ggamesGlobalObj.json")
 var globalObj = oldData ? JSON.parse(oldData) : {}
@@ -68,9 +77,16 @@ function generateAllocationReport() {
     
     // User allocations
     report += "USER ALLOCATIONS:\n";
+    var userCount = 0;
     for (var user in globalObj.donorTable) {
         var allocation = globalObj.donorTable[user].allocated || 0;
-        report += "- " + user + ": " + numberWithCommas(allocation) + " meat\n";
+        var total = globalObj.donorTable[user].total || 0;
+        report += "- " + user + ": " + numberWithCommas(allocation) + " meat (donated: " + numberWithCommas(total) + ")\n";
+        userCount++;
+    }
+    
+    if (userCount === 0) {
+        report += "- No users with allocations\n";
     }
     
     report += "\nSUMMARY:\n";
@@ -79,12 +95,13 @@ function generateAllocationReport() {
     report += "- Jackpot: " + numberWithCommas(totals.jackpot) + " meat\n";
     report += "- Grand Total Allocated: " + numberWithCommas(totals.grandTotal) + " meat\n";
     report += "- Bot's Actual Meat: " + numberWithCommas(currentMeat) + " meat\n";
+    report += "- Available Meat: " + numberWithCommas(Math.max(0, currentMeat - totals.grandTotal)) + " meat\n";
     
     // Check if adjustment needed
     if (totals.grandTotal > currentMeat) {
         var difference = totals.grandTotal - currentMeat;
         report += "\n!!! ALLOCATION EXCEEDS BOT MEAT !!!\n";
-        report += "Difference: " + numberWithCommas(difference) + " meat\n";
+        report += "Overage: " + numberWithCommas(difference) + " meat\n";
         
         // Adjust ggar's allocation
         if (!globalObj.donorTable["ggar"]) {
@@ -92,25 +109,35 @@ function generateAllocationReport() {
         }
         
         var ggarOldAllocation = globalObj.donorTable["ggar"].allocated || 0;
-        var adjustment = Math.min(difference, ggarOldAllocation);
-        globalObj.donorTable["ggar"].allocated -= adjustment;
+        var adjustment = Math.min(difference, Math.max(0, ggarOldAllocation));
         
-        report += "Adjusting ggar's allocation by -" + numberWithCommas(adjustment) + " meat\n";
-        report += "ggar's new allocation: " + numberWithCommas(globalObj.donorTable["ggar"].allocated) + " meat\n";
-        
-        if (adjustment < difference) {
-            report += "WARNING: Could not fully adjust (ggar allocation insufficient)\n";
-            report += "Remaining difference: " + numberWithCommas(difference - adjustment) + " meat\n";
+        if (adjustment > 0) {
+            globalObj.donorTable["ggar"].allocated -= adjustment;
+            report += "Adjusting ggar's allocation: -" + numberWithCommas(adjustment) + " meat\n";
+            report += "ggar's new allocation: " + numberWithCommas(globalObj.donorTable["ggar"].allocated) + " meat\n";
         }
         
-        // Save changes
-        bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json");
+        if (adjustment < difference) {
+            report += "WARNING: Could not fully adjust difference!\n";
+            report += "Remaining overage: " + numberWithCommas(difference - adjustment) + " meat\n";
+            report += "This indicates a serious allocation problem that needs manual review.\n";
+        }
+        
+        // Save changes if any adjustment was made
+        if (adjustment > 0) {
+            bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json");
+            report += "Global storage updated with adjustment.\n";
+        }
     } else {
-        report += "\nAllocation status: OK (within bot meat limits)\n";
+        report += "\nAllocation status: ✓ OK (within bot meat limits)\n";
     }
     
     var ggarAllocation = globalObj.donorTable["ggar"] ? globalObj.donorTable["ggar"].allocated : 0;
     report += "\nggar's current allocation: " + numberWithCommas(ggarAllocation) + " meat";
+    
+    if (ggarAllocation < 0) {
+        report += " (NEGATIVE - needs attention!)";
+    }
     
     return report;
 }
@@ -242,14 +269,20 @@ function main(sender, message) {
 
             // Admin/ggar handling - still need to track allocation for ggar
             if (sender === "ggar" || toInt(sender) === "3118267") {
-               validPrice = true;
                // For ggar, we need to track allocation like a normal user
                if (sender === "ggar") {
                   // Initialize ggar in donor table if not exists
                   if (!globalObj.donorTable["ggar"]) {
                      globalObj.donorTable["ggar"] = { total: 0, allocated: 0 };
                   }
+                  // Check if ggar has enough allocation
+                  if (globalObj.donorTable["ggar"].allocated < prize) {
+                     chatPrivate(sender, "insufficient allocation to host this game. you need " + numberWithCommas(prize) + " but only have " + numberWithCommas(globalObj.donorTable["ggar"].allocated) + " allocated. use 'allocreport' to check status.");
+                     validPrice = false;
+                     break;
+                  }
                }
+               validPrice = true;
             } else {
                // New funding system for everyone else
                var isPublic = false
