@@ -81,7 +81,8 @@ function generateAllocationReport() {
     for (var user in globalObj.donorTable) {
         var allocation = globalObj.donorTable[user].allocated || 0;
         var total = globalObj.donorTable[user].total || 0;
-        report += "- " + user + ": " + numberWithCommas(allocation) + " meat (donated: " + numberWithCommas(total) + ")\n";
+        if (allocation !== 0)
+            report += "- " + user + ": " + numberWithCommas(allocation) + " meat (donated: " + numberWithCommas(total) + ")\n";
         userCount++;
     }
     
