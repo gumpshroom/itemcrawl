@@ -4,7 +4,7 @@ var ticketList = ["red drunki-bear", "yellow drunki-bear", "green drunki-bear", 
 
 // Help text constants
 var helpTexts = {
-    help: "available commands: help, host, roll, howmuchmeat, ticketlist, hostlimit, howmanygames, jackpot, makepublic. use 'command help' for specific help.",
+    help: "available commands: help, host, roll, howmuchmeat, ticketlist, hostlimit, howmanygames, jackpot, makepublic. use 'command help' for specific help. admin commands: allocreport.",
     host: "host [amount] - host a ggame with specified meat prize (e.g. host 100k). minimum 50k required. you can use daily free hosting (700k/day) or your personal allocation from donations.",
     roll: "roll 1d[number] - roll a dice with specified sides (e.g. roll 1d100). add 'in games' to announce in games channel.",
     howmuchmeat: "howmuchmeat - shows how much meat i have, current jackpot amount, and public pool total.",
@@ -44,6 +44,75 @@ function numberWithCommas(x) {
     var parts = x.toString().split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return parts.join(".");
+}
+
+// Calculate total allocated meat across all users
+function calculateTotalAllocations() {
+    var totalUserAllocations = 0;
+    for (var user in globalObj.donorTable) {
+        totalUserAllocations += globalObj.donorTable[user].allocated || 0;
+    }
+    return {
+        totalUserAllocations: totalUserAllocations,
+        publicPool: globalObj.publicPool || 0,
+        jackpot: globalObj.jackpot || 0,
+        grandTotal: totalUserAllocations + (globalObj.publicPool || 0) + (globalObj.jackpot || 0)
+    };
+}
+
+// Generate allocation report and adjust ggar's allocation if needed
+function generateAllocationReport() {
+    var totals = calculateTotalAllocations();
+    var currentMeat = myMeat();
+    var report = "=== MEAT ALLOCATION REPORT ===\n\n";
+    
+    // User allocations
+    report += "USER ALLOCATIONS:\n";
+    for (var user in globalObj.donorTable) {
+        var allocation = globalObj.donorTable[user].allocated || 0;
+        report += "- " + user + ": " + numberWithCommas(allocation) + " meat\n";
+    }
+    
+    report += "\nSUMMARY:\n";
+    report += "- Total User Allocations: " + numberWithCommas(totals.totalUserAllocations) + " meat\n";
+    report += "- Public Pool: " + numberWithCommas(totals.publicPool) + " meat\n";
+    report += "- Jackpot: " + numberWithCommas(totals.jackpot) + " meat\n";
+    report += "- Grand Total Allocated: " + numberWithCommas(totals.grandTotal) + " meat\n";
+    report += "- Bot's Actual Meat: " + numberWithCommas(currentMeat) + " meat\n";
+    
+    // Check if adjustment needed
+    if (totals.grandTotal > currentMeat) {
+        var difference = totals.grandTotal - currentMeat;
+        report += "\n!!! ALLOCATION EXCEEDS BOT MEAT !!!\n";
+        report += "Difference: " + numberWithCommas(difference) + " meat\n";
+        
+        // Adjust ggar's allocation
+        if (!globalObj.donorTable["ggar"]) {
+            globalObj.donorTable["ggar"] = { total: 0, allocated: 0 };
+        }
+        
+        var ggarOldAllocation = globalObj.donorTable["ggar"].allocated || 0;
+        var adjustment = Math.min(difference, ggarOldAllocation);
+        globalObj.donorTable["ggar"].allocated -= adjustment;
+        
+        report += "Adjusting ggar's allocation by -" + numberWithCommas(adjustment) + " meat\n";
+        report += "ggar's new allocation: " + numberWithCommas(globalObj.donorTable["ggar"].allocated) + " meat\n";
+        
+        if (adjustment < difference) {
+            report += "WARNING: Could not fully adjust (ggar allocation insufficient)\n";
+            report += "Remaining difference: " + numberWithCommas(difference - adjustment) + " meat\n";
+        }
+        
+        // Save changes
+        bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json");
+    } else {
+        report += "\nAllocation status: OK (within bot meat limits)\n";
+    }
+    
+    var ggarAllocation = globalObj.donorTable["ggar"] ? globalObj.donorTable["ggar"].allocated : 0;
+    report += "\nggar's current allocation: " + numberWithCommas(ggarAllocation) + " meat";
+    
+    return report;
 }
 function main(sender, message) {
     if (message.includes("New message received from")) {
@@ -171,9 +240,16 @@ function main(sender, message) {
                break;
             }
 
-            // Admin/ggar bypass (same as before, but simplified)
+            // Admin/ggar handling - still need to track allocation for ggar
             if (sender === "ggar" || toInt(sender) === "3118267") {
                validPrice = true;
+               // For ggar, we need to track allocation like a normal user
+               if (sender === "ggar") {
+                  // Initialize ggar in donor table if not exists
+                  if (!globalObj.donorTable["ggar"]) {
+                     globalObj.donorTable["ggar"] = { total: 0, allocated: 0 };
+                  }
+               }
             } else {
                // New funding system for everyone else
                var isPublic = false
@@ -263,6 +339,11 @@ function main(sender, message) {
                             if (isPublic) {
                                 globalObj.publicPool -= playerAmount
                                 globalObj.publicPoolUsage[sender.toLowerCase()].used += playerAmount;
+                            } else if (sender === "ggar") {
+                                // Deduct from ggar's allocation
+                                if (globalObj.donorTable["ggar"]) {
+                                    globalObj.donorTable["ggar"].allocated -= playerAmount;
+                                }
                             } else {
                                 globalObj.donorTable[sender.toLowerCase()].allocated -= playerAmount;
                             }
@@ -451,6 +532,16 @@ function main(sender, message) {
                 print(JSON.stringify(globalObj, null, 4))
                 chatPrivate(sender, JSON.stringify(globalObj, null, 4))
                 kmail(sender, JSON.stringify(globalObj, null, 4), 0, "debug")
+            }
+            break;
+        case "allocreport":
+            if (sender === "ggar" || toInt(sender) === "3118267") {
+                var report = generateAllocationReport();
+                print(report);
+                chatPrivate(sender, "Allocation report generated and sent to ggar");
+                kmail("ggar", report, 0, "Allocation Report");
+            } else {
+                chatPrivate(sender, "hey hey hey wait.. you cant tell me what to do...")
             }
             break;
         default:
