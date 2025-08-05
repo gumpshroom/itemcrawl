@@ -327,6 +327,7 @@ function main(sender, message) {
                 if (!runningGame && Object.keys(getShop()).length === 0) {
                     print(putShopConfirm(100, 1, 10, item));
                     runningGame = true;
+                    var currentGameTicket = item.name; // Store current game's ticket for validation
                     chatGames("AR requested by " + sender + " with prize 1d" + numberWithCommas(prize) + " meat !!")
                     var cycles = 0;
                     var gameSize = 10;
@@ -337,19 +338,47 @@ function main(sender, message) {
                             //post game handle
                             var shopLog = getShopLog()
                             //print(shopInv)
-                            var winnerIndex = Math.floor(Math.random() * gameSize) + 1
-                            var match = shopLog[winnerIndex - 1].match(/ (\d\d:\d\d:\d\d) (.*) bought (\d*) \((.*)\)/)
-                            var winner = match[2]
-                            var boughtTime = match[1]
-                            var ticketName = match[4]
+                            
+                            // Find valid winners who bought the correct ticket for this game
+                            var validWinners = [];
+                            for (var i = 0; i < shopLog.length; i++) {
+                                var logMatch = shopLog[i].match(/ (\d\d:\d\d:\d\d) (.*) bought (\d*) \((.*)\)/);
+                                if (logMatch && logMatch[4] === currentGameTicket) {
+                                    validWinners.push({
+                                        index: i,
+                                        time: logMatch[1],
+                                        name: logMatch[2],
+                                        quantity: logMatch[3],
+                                        ticket: logMatch[4]
+                                    });
+                                }
+                            }
+                            
+                            // Sanity check: ensure we have valid winners with correct tickets
+                            if (validWinners.length === 0) {
+                                chatGames("ERROR: No valid winners found with correct ticket (" + currentGameTicket + "). Game cancelled.");
+                                print("ERROR: Ticket validation failed - no winners with ticket: " + currentGameTicket);
+                                print("Shop log entries:");
+                                for (var j = 0; j < shopLog.length; j++) {
+                                    print("  " + shopLog[j]);
+                                }
+                                break; // Exit game loop
+                            }
+                            
+                            // Select random winner from valid entries only
+                            var randomWinnerIndex = Math.floor(Math.random() * validWinners.length);
+                            var selectedWinner = validWinners[randomWinnerIndex];
+                            var winner = selectedWinner.name;
+                            var boughtTime = selectedWinner.time;
+                            var ticketName = selectedWinner.ticket;
                             var amount = Math.floor(Math.random() * prize) + 1
                             var playerAmount = Math.floor(amount * 0.9)
                             var jackpotAmount = amount - playerAmount
-                            var msg = "game ended !! rolling 1d" + gameSize + " gives " +  ((gameSize + 1) - winnerIndex) + "..."
+                            var msg = "game ended !! rolling 1d" + validWinners.length + " gives " + (randomWinnerIndex + 1) + "..."
                             chatGames(msg)
                             wait(5)
                             globalObj.gamesCount++
-                            msg = winner + " bought " + match[3] + " " + ticketName + " at " + boughtTime + " and won " + numberWithCommas(playerAmount) + " meat. "
+                            msg = winner + " bought " + selectedWinner.quantity + " " + ticketName + " at " + boughtTime + " and won " + numberWithCommas(playerAmount) + " meat. "
                             msg += numberWithCommas(jackpotAmount) + " meat has been added to the jackpot, "
                             msg += "rolling 1d" + numberWithCommas(50 - (globalObj.jackpotStreak > 45 ? 45 : globalObj.jackpotStreak)) + " for the jackpot..."
                             globalObj.jackpot += jackpotAmount
