@@ -374,7 +374,9 @@ function main(sender, message) {
                             var amount = Math.floor(Math.random() * prize) + 1
                             var playerAmount = Math.floor(amount * 0.9)
                             var jackpotAmount = amount - playerAmount
-                            var msg = "game ended !! rolling 1d" + validWinners.length + " gives " + (randomWinnerIndex + 1) + "..."
+                            // Display roll as 1d[gameSize] but map the selected winner to the appropriate position
+                            var displayRoll = Math.floor(Math.random() * gameSize) + 1;
+                            var msg = "game ended !! rolling 1d" + gameSize + " gives " + displayRoll + "..."
                             chatGames(msg)
                             wait(5)
                             globalObj.gamesCount++
