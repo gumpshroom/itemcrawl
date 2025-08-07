@@ -339,13 +339,17 @@ function main(sender, message) {
                             var shopLog = getShopLog()
                             //print(shopInv)
                             
-                            // Find valid winners who bought the correct ticket for this game
-                            var validWinners = [];
-                            for (var i = 0; i < shopLog.length; i++) {
-                                var logMatch = shopLog[i].match(/ (\d\d:\d\d:\d\d) (.*) bought (\d*) \((.*)\)/);
+                            // Only examine the last 10 shop log entries (since only 10 tickets are sold per game)
+                            // Use gameSize if available (set during timeout), otherwise assume 10
+                            var entriesToCheck = gameSize || 10;
+                            var lastEntries = shopLog.slice(-entriesToCheck);
+                            
+                            // Find valid ticket purchases in chronological order
+                            var validTicketPurchases = [];
+                            for (var i = 0; i < lastEntries.length; i++) {
+                                var logMatch = lastEntries[i].match(/ (\d\d:\d\d:\d\d) (.*) bought (\d*) \((.*)\)/);
                                 if (logMatch && logMatch[4] === currentGameTicket) {
-                                    validWinners.push({
-                                        index: i,
+                                    validTicketPurchases.push({
                                         time: logMatch[1],
                                         name: logMatch[2],
                                         quantity: logMatch[3],
@@ -354,29 +358,26 @@ function main(sender, message) {
                                 }
                             }
                             
-                            // Sanity check: ensure we have valid winners with correct tickets
-                            if (validWinners.length === 0) {
-                                chatGames("ERROR: No valid winners found with correct ticket (" + currentGameTicket + "). Game cancelled.");
-                                print("ERROR: Ticket validation failed - no winners with ticket: " + currentGameTicket);
-                                print("Shop log entries:");
-                                for (var j = 0; j < shopLog.length; j++) {
-                                    print("  " + shopLog[j]);
+                            // Sanity check: ensure we have valid ticket purchases
+                            if (validTicketPurchases.length === 0) {
+                                chatGames("ERROR: No valid ticket purchases found for " + currentGameTicket + " in last " + entriesToCheck + " shop entries. Game cancelled.");
+                                print("ERROR: No valid ticket purchases found - last " + entriesToCheck + " entries:");
+                                for (var j = 0; j < lastEntries.length; j++) {
+                                    print("  " + lastEntries[j]);
                                 }
                                 break; // Exit game loop
                             }
                             
-                            // Select random winner from valid entries only
-                            var randomWinnerIndex = Math.floor(Math.random() * validWinners.length);
-                            var selectedWinner = validWinners[randomWinnerIndex];
+                            // Roll dice based on number of valid tickets sold and select winner by position
+                            var winnerRoll = Math.floor(Math.random() * validTicketPurchases.length) + 1;
+                            var selectedWinner = validTicketPurchases[winnerRoll - 1]; // Convert to 0-based index
                             var winner = selectedWinner.name;
                             var boughtTime = selectedWinner.time;
                             var ticketName = selectedWinner.ticket;
                             var amount = Math.floor(Math.random() * prize) + 1
                             var playerAmount = Math.floor(amount * 0.9)
                             var jackpotAmount = amount - playerAmount
-                            // Display roll as 1d[gameSize] but map the selected winner to the appropriate position
-                            var displayRoll = Math.floor(Math.random() * gameSize) + 1;
-                            var msg = "game ended !! rolling 1d" + gameSize + " gives " + displayRoll + "..."
+                            var msg = "game ended !! rolling 1d" + validTicketPurchases.length + " gives " + winnerRoll + "..."
                             chatGames(msg)
                             wait(5)
                             globalObj.gamesCount++
