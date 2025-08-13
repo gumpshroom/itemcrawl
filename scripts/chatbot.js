@@ -378,15 +378,15 @@ function main(sender, message) {
                             chatGames(jackpotmsg)
 
                             if (isPublic) {
-                                globalObj.publicPool -= playerAmount
-                                globalObj.publicPoolUsage[sender.toLowerCase()].used += playerAmount;
+                                globalObj.publicPool -= amount
+                                globalObj.publicPoolUsage[sender.toLowerCase()].used += amount;
                             } else if (sender === "ggar") {
                                 // Deduct from ggar's allocation
                                 if (globalObj.donorTable["ggar"]) {
-                                    globalObj.donorTable["ggar"].allocated -= playerAmount;
+                                    globalObj.donorTable["ggar"].allocated -= amount;
                                 }
                             } else {
-                                globalObj.donorTable[sender.toLowerCase()].allocated -= playerAmount;
+                                globalObj.donorTable[sender.toLowerCase()].allocated -= amount;
                             }
                             
                             bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json")
