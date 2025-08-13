@@ -78,11 +78,11 @@ function generateAllocationReport() {
     // User allocations
     report += "USERS:\n";
     var userCount = 0;
-    report += "Top 20 donors:\n";
+    report += "Top 10 allocated:\n";
     var sortedDonors = Object.entries(globalObj.donorTable).sort((a, b) => ((b[1].allocated || 0) - (a[1].allocated || 0)));
 for (var i = 0; i < sortedDonors.length; i++) {
-    if (userCount >= 20) {
-        report += "- ...and " + (sortedDonors.length - 20) + " more users (showing top 20)\n";
+    if (userCount >= 10) {
+        report += "- ...and " + (sortedDonors.length - 10) + " more users (showing top 10)\n";
         break;
     }
     var user = sortedDonors[i][0];
@@ -92,7 +92,18 @@ for (var i = 0; i < sortedDonors.length; i++) {
         report += "- " + user + ": " + numberWithCommas(allocation) + " meat (donated: " + numberWithCommas(total) + ")\n";
     userCount++;
 }
-    
+report += "\nTop 10 all time:\n";
+    var sortedAllTimeDonors = Object.entries(globalObj.donorTable).sort((a, b) => ((b[1].total || 0) - (a[1].total || 0)));
+for (var i = 0; i < sortedAllTimeDonors.length; i++) {
+    if (userCount >= 10) {
+        break;
+    }
+    var user = sortedAllTimeDonors[i][0];
+    var total = sortedAllTimeDonors[i][1].total || 0;
+    if (total !== 0)
+        report += "- " + user + ": " + numberWithCommas(total) + " meat donated\n";
+    userCount++;
+}
     if (userCount === 0) {
         report += "- No users with allocations\n";
     }
