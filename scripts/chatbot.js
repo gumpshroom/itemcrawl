@@ -93,6 +93,7 @@ for (var i = 0; i < sortedDonors.length; i++) {
     userCount++;
 }
 report += "\nTop 10 all time:\n";
+userCount = 0;
     var sortedAllTimeDonors = Object.entries(globalObj.donorTable).sort((a, b) => ((b[1].total || 0) - (a[1].total || 0)));
 for (var i = 0; i < sortedAllTimeDonors.length; i++) {
     if (userCount >= 10) {
