@@ -229,11 +229,28 @@ function main(sender, message) {
             chatPrivate(sender, helpTexts.help)
             break;
         case "setdonorlevel":
+            // Usage: setdonorlevel [amount] [username]
             if (args.length > 1) {
                 if (sender === "ggar") {
-                    globalObj.publicPoolUsage[args.slice(1).join(" ").toLowerCase()] = parseInt(args[0]);
+                    var allocAmount = parseInt(args[0]);
+                    var userName = args.slice(1).join(" ").toLowerCase();
+                    if (!globalObj.donorTable[userName]) {
+                        globalObj.donorTable[userName] = { total: 0, allocated: 0 };
+                    }
+                    globalObj.donorTable[userName].allocated = allocAmount;
                     bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json");
-                    chatPrivate("ggar", "set " + args.slice(1).join(" ").toLowerCase() + " donor level to " + numberWithCommas(parseInt(args[0])));
+                    chatPrivate("ggar", "set allocation for " + userName + " to " + numberWithCommas(allocAmount));
+                }
+            }
+            break;
+        case "setpublicpool":
+            // Usage: setpublicpool [amount]
+            if (args.length === 1) {
+                if (sender === "ggar") {
+                    var poolAmount = parseInt(args[0]);
+                    globalObj.publicPool = poolAmount;
+                    bufferToFile(JSON.stringify(globalObj), "./ggamesGlobalObj.json");
+                    chatPrivate("ggar", "set public pool to " + numberWithCommas(poolAmount));
                 }
             }
             break;
