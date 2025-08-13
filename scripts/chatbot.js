@@ -80,17 +80,20 @@ function generateAllocationReport() {
     var userCount = 0;
     globalObj.donorTable.sort((a, b) => (b.allocated || 0) - (a.allocated || 0)); // Sort by allocation descending
     report += "Top 20 donors:\n";
-    for (var user in globalObj.donorTable) {
-        if (userCount >= 20) {
-            report += "- ...and " + (Object.keys(globalObj.donorTable).length - 20) + " more users (showing top 20)\n";
-            break;
-        }
-        var allocation = globalObj.donorTable[user].allocated || 0;
-        var total = globalObj.donorTable[user].total || 0;
-        if (allocation !== 0)
-            report += "- " + user + ": " + numberWithCommas(allocation) + " meat (donated: " + numberWithCommas(total) + ")\n";
-        userCount++;
+    var sortedDonors = Object.entries(globalObj.donorTable)
+    .sort((a, b) => ((b[1].allocated || 0) - (a[1].allocated || 0)));
+for (var i = 0; i < sortedDonors.length; i++) {
+    if (userCount >= 20) {
+        report += "- ...and " + (sortedDonors.length - 20) + " more users (showing top 20)\n";
+        break;
     }
+    var user = sortedDonors[i][0];
+    var allocation = sortedDonors[i][1].allocated || 0;
+    var total = sortedDonors[i][1].total || 0;
+    if (allocation !== 0)
+        report += "- " + user + ": " + numberWithCommas(allocation) + " meat (donated: " + numberWithCommas(total) + ")\n";
+    userCount++;
+}
     
     if (userCount === 0) {
         report += "- No users with allocations\n";
