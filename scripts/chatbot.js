@@ -78,10 +78,8 @@ function generateAllocationReport() {
     // User allocations
     report += "USERS:\n";
     var userCount = 0;
-    globalObj.donorTable.sort((a, b) => (b.allocated || 0) - (a.allocated || 0)); // Sort by allocation descending
     report += "Top 20 donors:\n";
-    var sortedDonors = Object.entries(globalObj.donorTable)
-    .sort((a, b) => ((b[1].allocated || 0) - (a[1].allocated || 0)));
+    var sortedDonors = Object.entries(globalObj.donorTable).sort((a, b) => ((b[1].allocated || 0) - (a[1].allocated || 0)));
 for (var i = 0; i < sortedDonors.length; i++) {
     if (userCount >= 20) {
         report += "- ...and " + (sortedDonors.length - 20) + " more users (showing top 20)\n";
