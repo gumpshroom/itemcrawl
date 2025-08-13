@@ -73,12 +73,18 @@ function calculateTotalAllocations() {
 function generateAllocationReport() {
     var totals = calculateTotalAllocations();
     var currentMeat = myMeat();
-    var report = "=== MEAT ALLOCATION REPORT ===\n\n";
+    var report = "";
     
     // User allocations
-    report += "USER ALLOCATIONS:\n";
+    report += "USERS:\n";
     var userCount = 0;
+    globalObj.donorTable.sort((a, b) => (b.allocated || 0) - (a.allocated || 0)); // Sort by allocation descending
+    report += "Top 20 donors:\n";
     for (var user in globalObj.donorTable) {
+        if (userCount >= 20) {
+            report += "- ...and " + (Object.keys(globalObj.donorTable).length - 20) + " more users (showing top 20)\n";
+            break;
+        }
         var allocation = globalObj.donorTable[user].allocated || 0;
         var total = globalObj.donorTable[user].total || 0;
         if (allocation !== 0)
@@ -101,7 +107,7 @@ function generateAllocationReport() {
     // Check if adjustment needed
     if (totals.grandTotal > currentMeat) {
         var difference = totals.grandTotal - currentMeat;
-        report += "\n!!! ALLOCATION EXCEEDS BOT MEAT !!!\n";
+        report += "\n!!! ALLOCATION EXCEEDS MEAT !!!\n";
         report += "Overage: " + numberWithCommas(difference) + " meat\n";
         
         // Adjust ggar's allocation
