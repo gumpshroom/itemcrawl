@@ -4,7 +4,7 @@ var ticketList = ["red drunki-bear", "yellow drunki-bear", "green drunki-bear", 
 
 // Help text constants
 var helpTexts = {
-    help: "available commands: help, host, roll, howmuchmeat, ticketlist, hostlimit, howmanygames, jackpot, makepublic. use 'command help' for specific help. admin commands: allocreport.",
+    help: "available commands: help, host, roll, howmuchmeat, ticketlist, hostlimit, howmanygames, jackpot, makepublic, stats. use 'command help' for specific help. admin commands: allocreport.",
     host: "host [amount] - host a ggame with specified meat prize (e.g. host 100k). minimum 50k required. you can use daily free hosting (700k/day) or your personal allocation from donations.",
     roll: "roll 1d[number] - roll a dice with specified sides (e.g. roll 1d100). add 'in games' to announce in games channel.",
     howmuchmeat: "howmuchmeat - shows how much meat i have, current jackpot amount, and public pool total.",
@@ -12,7 +12,8 @@ var helpTexts = {
     hostlimit: "hostlimit - shows your daily free hosting limit remaining and any personal allocation from donations.",
     howmanygames: "howmanygames - shows the total number of ggames i have hosted so far.",
     jackpot: "jackpot - shows the current jackpot amount and how many games since it was last won.",
-    makepublic: "makepublic [amount] - transfers meat from your personal allocation to the public pool (e.g. makepublic 100k)."
+    makepublic: "makepublic [amount] - transfers meat from your personal allocation to the public pool (e.g. makepublic 100k).",
+    stats: "stats - shows the total amount of meat that has been given away through ggames."
 }
 
 // Helper function to check if help should be shown
@@ -613,6 +614,20 @@ function main(sender, message) {
             } else {
                 chatPrivate(sender, "hey hey hey wait.. you cant tell me what to do...")
             }
+            break;
+        case "stats":
+            if (shouldShowHelp(args, "stats")) {
+                chatPrivate(sender, helpTexts.stats);
+                break;
+            }
+            // Calculate total donations from all users
+            var totalDonations = 0;
+            for (var user in globalObj.donorTable) {
+                totalDonations += globalObj.donorTable[user].total || 0;
+            }
+            // Calculate total given away: donations - current meat
+            var totalGivenAway = totalDonations - myMeat();
+            chatPrivate(sender, "total meat given away through ggames: " + numberWithCommas(totalGivenAway) + " meat (from " + numberWithCommas(totalDonations) + " meat donated)");
             break;
         default:
             chatPrivate(sender, "??? i dont know that command")
