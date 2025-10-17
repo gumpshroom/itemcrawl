@@ -349,7 +349,7 @@ function main(sender, message) {
                }
 
                if (!validPrice) {
-                  chatPrivate(sender, "...not have enough hosting funds. u may host up to 500k per day from public pool or use ur allocated funds from donations..");
+                  chatPrivate(sender, "...not have enough hosting funds. u may host up to 700k per day from public pool or use ur allocated funds from donations..");
                }
             }
             if (validPrice) { //50 meat for package, if winner in ronin
