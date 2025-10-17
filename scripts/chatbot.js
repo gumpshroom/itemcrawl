@@ -292,7 +292,7 @@ function main(sender, message) {
             
             // Check if bot has enough total meat (jackpot + prize + buffer)
             var totals = calculateTotalAllocations();
-            var botHasEnoughMeat = (myMeat() - globalObj.jackpot - totals.totalUserAllocations) + 50 >= prize;
+            var botHasEnoughMeat = (myMeat() - globalObj.jackpot) + 50 >= prize;
             if (!botHasEnoughMeat) {
                chatPrivate(sender, "i dont have enough meat or the prize amount is invalid. (i have " + numberWithCommas(myMeat()) + " meat)");
                break;
