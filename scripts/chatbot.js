@@ -482,7 +482,7 @@ function main(sender, message) {
                 for (var i = 0; i < ticketList.length; i++) {
                     try {
                         if (itemAmount(Item.get(ticketList[i])) < 50) {
-                            buy(args.length > 0 ? parseInt(args[0]) : 100, Item.get(ticketList[i]))
+                            buy(args.length > 0 ? parseInt(args[0]) : 100, Item.get(ticketList[i]), 10000)
                             print("bought " + ticketList[i])
                             chatPrivate(sender, "bought " + ticketList[i] + " x" + (args.length > 0 ? parseInt(args[0]) : 100))
                         } else {
