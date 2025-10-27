@@ -4,7 +4,7 @@ var ticketList = ["red drunki-bear", "yellow drunki-bear", "green drunki-bear", 
 
 // Help text constants
 var helpTexts = {
-    help: "available commands: help, host, roll, howmuchmeat, ticketlist, hostlimit, howmanygames, jackpot, makepublic, stats. use 'command help' for specific help. admin commands: allocreport.",
+    help: "available commands: help, host, roll, howmuchmeat, ticketlist, hostlimit, howmanygames, jackpot, makepublic, stats, leaderboard. use 'command help' for specific help. admin commands: allocreport.",
     host: "host [amount] - host a ggame with specified meat prize (e.g. host 100k). minimum 50k required. you can use daily free hosting (700k/day) or your personal allocation from donations.",
     roll: "roll 1d[number] - roll a dice with specified sides (e.g. roll 1d100). add 'in games' to announce in games channel.",
     howmuchmeat: "howmuchmeat - shows how much meat i have, current jackpot amount, and public pool total.",
@@ -13,7 +13,8 @@ var helpTexts = {
     howmanygames: "howmanygames - shows the total number of ggames i have hosted so far.",
     jackpot: "jackpot - shows the current jackpot amount and how many games since it was last won.",
     makepublic: "makepublic [amount] - transfers meat from your personal allocation to the public pool (e.g. makepublic 100k).",
-    stats: "stats - shows the total amount of meat that has been given away through ggames."
+    stats: "stats - shows the total amount of meat that has been given away through ggames.",
+    leaderboard: "leaderboard - shows the all-time top 10 donors via kmail."
 }
 
 // Helper function to check if help should be shown
@@ -68,6 +69,32 @@ function calculateTotalAllocations() {
         jackpot: globalObj.jackpot || 0,
         grandTotal: totalUserAllocations + (globalObj.publicPool || 0) + (globalObj.jackpot || 0)
     };
+}
+
+// Generate all-time leaderboard for public consumption
+function generateLeaderboard() {
+    var leaderboard = "ALL-TIME TOP 10 DONORS:\n\n";
+    var sortedAllTimeDonors = Object.entries(globalObj.donorTable).sort((a, b) => ((b[1].total || 0) - (a[1].total || 0)));
+    var userCount = 0;
+    
+    for (var i = 0; i < sortedAllTimeDonors.length; i++) {
+        if (userCount >= 10) {
+            break;
+        }
+        var user = sortedAllTimeDonors[i][0];
+        var total = sortedAllTimeDonors[i][1].total || 0;
+        if (total !== 0) {
+            leaderboard += (userCount + 1) + ". " + user + ": " + numberWithCommas(total) + " meat donated\n";
+            userCount++;
+        }
+    }
+    
+    if (userCount === 0) {
+        leaderboard += "No donors yet.\n";
+    }
+    
+    leaderboard += "\nThank you to all our generous donors!";
+    return leaderboard;
 }
 
 // Generate allocation report and adjust ggar's allocation if needed
@@ -629,6 +656,15 @@ function main(sender, message) {
             // Calculate total given away: donations - current meat
             var totalGivenAway = totalDonations - myMeat();
             chatPrivate(sender, "total meat given away through ggames: " + numberWithCommas(totalGivenAway) + " meat (from " + numberWithCommas(totalDonations) + " meat donated)");
+            break;
+        case "leaderboard":
+            if (shouldShowHelp(args, "leaderboard")) {
+                chatPrivate(sender, helpTexts.leaderboard);
+                break;
+            }
+            var leaderboardText = generateLeaderboard();
+            kmail(sender, leaderboardText, 0, "All-Time Leaderboard");
+            chatPrivate(sender, "leaderboard sent via kmail!");
             break;
         default:
             chatPrivate(sender, "??? i dont know that command")
