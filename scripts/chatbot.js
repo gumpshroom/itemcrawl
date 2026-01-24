@@ -67,7 +67,7 @@ function calculateTotalAllocations() {
         totalUserAllocations: totalUserAllocations,
         publicPool: globalObj.publicPool || 0,
         jackpot: globalObj.jackpot || 0,
-        grandTotal: totalUserAllocations + (globalObj.publicPool || 0) + (globalObj.jackpot || 0)
+        grandTotal: totalUserAllocations + (globalObj.publicPool || 0)
     };
 }
 
